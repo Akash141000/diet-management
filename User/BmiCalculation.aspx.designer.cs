@@ -114,42 +114,6 @@ namespace DietManagement.User
         protected global::System.Web.UI.WebControls.RequiredFieldValidator heightInputRequiredValidator;
 
         /// <summary>
-        /// heightInputRegex1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator heightInputRegex1;
-
-        /// <summary>
-        /// heightInputRegex2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator heightInputRegex2;
-
-        /// <summary>
-        /// heightInputRangeValidatorFeetInches control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator heightInputRangeValidatorFeetInches;
-
-        /// <summary>
-        /// heightInputRangeValidatorFeet control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator heightInputRangeValidatorFeet;
-
-        /// <summary>
         /// heightInputRequiredValidatorInches control.
         /// </summary>
         /// <remarks>
@@ -157,6 +121,33 @@ namespace DietManagement.User
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator heightInputRequiredValidatorInches;
+
+        /// <summary>
+        /// heightInputRegex control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator heightInputRegex;
+
+        /// <summary>
+        /// heightInputRangeValidatorInches control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator heightInputRangeValidatorInches;
+
+        /// <summary>
+        /// heightInputRangeValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator heightInputRangeValidator;
 
         /// <summary>
         /// AgeLabel control.

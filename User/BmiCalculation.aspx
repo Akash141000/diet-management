@@ -133,14 +133,24 @@
                                 <span class="help-block">
                                     <asp:RequiredFieldValidator
                                         ID="heightInputRequiredValidator"
+                                        Enabled="true"
                                         runat="server"
                                         ControlToValidate="heightInput"
                                         Display="Dynamic"
                                         ErrorMessage="Required!">
                                     </asp:RequiredFieldValidator>
+                                    <asp:RequiredFieldValidator
+                                        ID="heightInputRequiredValidatorInches"
+                                        Enabled="true"
+                                        runat="server"
+                                        Display="Dynamic"
+                                        ControlToValidate="heightInputInInches"
+                                        ErrorMessage="Required!">
+                                    </asp:RequiredFieldValidator>
 
                                     <asp:RegularExpressionValidator
-                                        ID="heightInputRegex1"
+                                        ID="heightInputRegex"
+                                        Enabled="true"
                                         runat="server"
                                         ControlToValidate="heightInput"
                                         ValidationExpression="^[0-9]*[1-9][0-9]*$"
@@ -149,7 +159,7 @@
                                         SetFocusOnError="True">
                                     </asp:RegularExpressionValidator>
 
-                                    <asp:RegularExpressionValidator
+                                    <%--<asp:RegularExpressionValidator
                                         ID="heightInputRegex2"
                                         Enabled="false"
                                         runat="server"
@@ -157,10 +167,10 @@
                                         ValidationExpression="[0-9]([.,][0-9]{1,2})?$"
                                         Display="Dynamic"
                                         ErrorMessage="Invalid Input!">
-                                    </asp:RegularExpressionValidator>
+                                    </asp:RegularExpressionValidator>--%>
 
                                     <asp:RangeValidator
-                                        ID="heightInputRangeValidatorFeetInches"
+                                        ID="heightInputRangeValidatorInches"
                                         runat="server"
                                         ControlToValidate="heightInputInInches"
                                         Display="Dynamic"
@@ -171,7 +181,7 @@
                                     </asp:RangeValidator>
 
                                     <asp:RangeValidator
-                                        ID="heightInputRangeValidatorFeet"
+                                        ID="heightInputRangeValidator"
                                         runat="server"
                                         ControlToValidate="heightInput"
                                         MinimumValue="4"
@@ -180,13 +190,7 @@
                                         ErrorMessage="Invalid Input!">
                                     </asp:RangeValidator>
 
-                                    <asp:RequiredFieldValidator
-                                        ID="heightInputRequiredValidatorInches"
-                                        runat="server"
-                                        Display="Dynamic"
-                                        ControlToValidate="heightInputInInches"
-                                        ErrorMessage="Required!">
-                                    </asp:RequiredFieldValidator>
+                                    
                                 </span>
                             </div>
                         </div>
@@ -313,14 +317,8 @@
          //    $('[data-toggle="tooltip"]').tooltip();
          //});
 
-         //validators logic
-         //const heightInputType = document.getElementById("heightInputTypeSelected");
-         //console.dir(heightInputType);
-         //function dropDownLogic() {
-         //    console.log('val', heightInputType.value);
-         //};
-
          //weightInputType
+         //onLoading();
          const weightInputSelector = document.getElementById("weightInputTypeSelected");
          weightInputSelector.addEventListener("change", weightInputHandler);
          const weightInput = document.getElementById("weightInput");
@@ -335,25 +333,58 @@
 
 
          //heightInputType ft m cm
-         const heightInputSelector = document.getElementById("heightInputTypeSelected");
+         let heightInputSelector = document.getElementById("heightInputTypeSelected");
          heightInputTypeSelected.addEventListener("change", heightInputHandler);
-         const heightInput = document.getElementById("heightInput");
-         const heightInputInInches= document.getElementById("heightInputInInches");
+         //input Fields
+         let heightInput = document.getElementById("heightInput");
+         let heightInputInInches = document.getElementById("heightInputInInches");
+         //required Validator
+          let heightInputRv = document.getElementById("heightInputRequiredValidator");
+         let heightInputInchesRv = document.getElementById("heightInputRequiredValidatorInches");
+         //regex validator
+         let heightInputRgx = document.getElementById("heightInputRegex");
+         //range validator
+         let heightInputRv = document.getElementById("heightInputRangeValidator");
+         let heightInputRvInches = document.getElementById("heightInputRangeValidatorFeetInches");
+
          function heightInputHandler() {
              if (heightInputSelector.value == "ft") {
                  heightInput.placeholder = "ft";
                  heightInputInInches.style.visibility = "visible";
+                 //heightInputInchesRequiredValidator.enabled = true;
+                 //heightInputRegex.ValidateExpression = "^[0-9]*[1-9][0-9]*$";
+                 //heightInputRangeValidator.MinimumValue = "4";
+                 //heightInputRangeValidator.MaximumValue = "6";
                  return;
              }
              else if (heightInputSelector.value == "m") {
                  heightInput.placeholder = "m";
                  heightInputInInches.style.visibility = "hidden";
+                 
+                 //heightInputInchesRequiredValidator.enabled = false;
+                 //heightInputRegex.ValidateExpression = "[0-9]([.,][0-9]{1,2})?$";
+                 //heightInputRangeValidatorInches.enabled = false;
+                 //heightInputRangeValidator.MinimumValue = "1.47";
+                 //heightInputRangeValidator.MaximumValue = "1.98";
                  return;
              }
              heightInput.placeholder = "cm";
              heightInputInInches.style.visibility = "hidden";
-             return
+             //heightInputInchesRequiredValidator.enabled = false;
+             //heightInputRegex.ValidateExpression = "[0-9]([.,][0-9]{1,2})?$";
+             //heightInputRangeValidatorInches.enabled = false;
+             //heightInputRangeValidator.MinimumValue = "147";
+             //heightInputRangeValidator.MaximumValue = "198";
+             return;
          }
+
+
+         //async function onLoading() {
+         //    heightInputInInches.style.visibility = "visible";
+         //    heightInputInchesRequiredValidator.enable = true;
+         //    heightInputRangeValidator.enable = true;
+         //    heightInputRangeValidatorInches.enable = true;
+         //}
      </script>
     
 
