@@ -1,6 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="LoginPage.aspx.cs" MasterPageFile="~/Navigation/Navigation.master" Inherits="DietManagement.LoginPage" %>
 
 <asp:Content ContentPlaceHolderID="head" runat="server">
+     <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link href="../Bootstrap-5/css/bootstrap.min.css" rel="stylesheet" />
     <script async="async" defer="defer" src="../Bootstrap-5/css/js/bootstrap.bundle.min.js"></script>

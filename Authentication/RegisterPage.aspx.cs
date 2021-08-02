@@ -20,9 +20,9 @@ namespace DietManagement
         {
 
         }
-        //readonly String connectionString = 
-        SqlCommand cmd = new SqlCommand();
-        SqlConnection connection = new SqlConnection();
+       
+        //SqlCommand cmd = new SqlCommand();
+        //SqlConnection connection = new SqlConnection();
         //protected void checkIfAdmin()
         //{
         //    if (usernameInput.Text == "Admin14")
@@ -50,46 +50,41 @@ namespace DietManagement
             //checkIfAdmin();
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnection"].ConnectionString))
             {
-
                 try
                 {
-                    Debug.WriteLine("entered");
+
                     connection.Open();
-                    Debug.WriteLine("entered....");
-                    Debug.WriteLine(fullNameInput.Text);
-                    Debug.WriteLine(genderTypeSelected.SelectedIndex);
-                    Debug.WriteLine(emailIdInput.Text);
-                    Debug.WriteLine(usernameInput.Text);
-                    Debug.WriteLine(hashedPassword);
 
-                    //SqlCommand cmd = new SqlCommand("INSERT into User" + "(Name,Gender,Email,Username,Password) Values(@Name,@Gender,@Email,@Username,@Password)", connection);
-
-                    SqlCommand cmd = new SqlCommand("insert into User(Name,Gender,Email,Username,Password) values(@Name,@Gender,@Email,@Username,@Password)", connection);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO [User] (Name,Gender,Email,Username,Password) values(@Name,@Gender,@Email,@Username,@Password)", connection);
                     cmd.Parameters.AddWithValue("@Name", fullNameInput.Text);
-                    cmd.Parameters.AddWithValue("@Gender", genderTypeSelected.SelectedIndex);
+                    cmd.Parameters.AddWithValue("@Gender", genderTypeSelected.SelectedValue);
                     cmd.Parameters.AddWithValue("@Email", emailIdInput.Text);
                     cmd.Parameters.AddWithValue("@Username", usernameInput.Text);
                     cmd.Parameters.AddWithValue("@Password", hashedPassword);
-                    Debug.WriteLine(cmd.);
+
                     var success = cmd.ExecuteNonQuery();
                     if (success == 0)
                     {
-                        Console.WriteLine("notfound");
                         registrationResult.Text = "Unable to Register";
                         registrationResult.Visible = true;
                         return;
                     }
                     registrationResult.Text = "Registration Done Successfully.";
                 }
-                catch(Exception)
+                catch (Exception)
                 {
-                    Console.WriteLine("error");
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again.')", true);
                 }
-                
             }
 
 
-        }
 
+
+        }
     }
 }
+
+
+
+
+

@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Web.Security;
 using System.Security.Cryptography;
 using System.Text;
+using System.Diagnostics;
 
 
 namespace DietManagement
@@ -47,35 +48,52 @@ namespace DietManagement
                     }
                     var hash_pass = sb.ToString();
 
-                    SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
 
-                    con.Open();
-                    SqlCommand cmd = new SqlCommand("select * from Reg where Username =@Username and Password=@Password", con);
-                    cmd.Parameters.AddWithValue("@Username", usernameInput.Text);
-                    cmd.Parameters.AddWithValue("@Password", hash_pass);
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    if (dt.Rows.Count > 0)
+                    using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
                     {
+
+
+
+                        connection.Open();
+                        SqlCommand cmd = new SqlCommand("SELECT * FROM [User] WHERE Username=@Username AND Password=@Password", connection);
+                        cmd.Parameters.AddWithValue("@Username", usernameInput.Text);
+                        cmd.Parameters.AddWithValue("@Password", hash_pass);
+                        var logged = cmd.ExecuteScalar();
+                        
+                        if (logged == null)
+                        {
+                            loginResult.Visible = true;
+                            loginResult.Text = "Wrong Details";
+                            return;
+
+                        }
+
                         Session["Username"] = usernameInput.Text.ToString();
-                        Response.Redirect("~/BMI.aspx");
-                        con.Close();
+                        Response.Redirect("~/User/BmiCalculation.aspx");
+                        return;
+                        //SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        //DataTable dt = new DataTable();
+                        //da.Fill(dt);
+                        //if (dt.Rows.Count > 0)
+                        //{
+                        //    Session["Username"] = usernameInput.Text.ToString();
+                        //    Response.Redirect("~/User/BmiCalculation.aspx");
+                        //    return;
+                        //}
 
-                    }
+                        //else
+                        //{
 
-                    else
-                    {
-
-                        loginResult.Visible = true;
-                        loginResult.Text = "Wrong Details";
-                        con.Close();
+                        //    loginResult.Visible = true;
+                        //    loginResult.Text = "Wrong Details";
+                        //    return;
+                        //}
                     }
                 }
             }
             catch (Exception)
             {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again.')", true);
             }
         }
 
@@ -97,33 +115,36 @@ namespace DietManagement
                 }
                 var hash_pass = sb.ToString();
 
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-                con.Open();
-                SqlCommand cmd = new SqlCommand("select * from Reg where UserName =@Username and Password=@Password", con);
-                cmd.Parameters.AddWithValue("@Username", usernameInput.Text);
-                cmd.Parameters.AddWithValue("@Password", hash_pass);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                if (dt.Rows.Count > 0)
+
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
                 {
-                    Session["Username"] = usernameInput.Text.ToString();
-                    Response.Redirect("~/ChangePassword.aspx");
-                    con.Close();
-                }
+                    connection.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM [User] where Username=@Username and Password=@Password", connection);
+                    cmd.Parameters.AddWithValue("@Username", usernameInput.Text);
+                    cmd.Parameters.AddWithValue("@Password", hash_pass);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    if (dt.Rows.Count > 0)
+                    {
+                        Session["Username"] = usernameInput.Text.ToString();
+                        Response.Redirect("~/ChangePassword.aspx");
+                        return;
+                    }
 
-                else
-                {
+                    else
+                    {
 
 
-                    loginResult.Visible = true;
-                    loginResult.Text = "Wrong Details";
-                    con.Close();
+                        loginResult.Visible = true;
+                        loginResult.Text = "Wrong Details";
+                        return;
+                    }
                 }
             }
             catch (Exception)
             {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again.')", true);
             }
 
         }
