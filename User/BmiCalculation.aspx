@@ -53,6 +53,7 @@
                                 <div class="input-group">
                                     <asp:TextBox
                                         ID="weightInput"
+                                        placeholder="kg"
                                         data-placement="right"
                                         title="Enter value between 30 to 250"
                                         data-toggle="tooltip"
@@ -61,10 +62,8 @@
                                     <div class="input-group-btn">
                                         <asp:DropDownList
                                             ID="weightInputTypeSelected"
-                                            AutoPostBack="true"
                                             runat="server"
-                                            class="text-dark form-control"
-                                            OnSelectedIndexChanged="weightInputTypeSelected_SelectedIndexChanged">
+                                            class="text-dark form-control">
                                             <asp:ListItem>Kg</asp:ListItem>
                                             <asp:ListItem>lbs</asp:ListItem>
                                         </asp:DropDownList>
@@ -105,6 +104,7 @@
                                         ID="heightInput"
                                         data-placement="right"
                                         data-toggle="tooltip"
+                                        placeholder="ft"
                                         runat="server"
                                         class="text-dark form-control"></asp:TextBox>
                                     <asp:TextBox
@@ -312,17 +312,48 @@
          //$(document).ready(function () {
          //    $('[data-toggle="tooltip"]').tooltip();
          //});
-         //validation logic
+
+         //validators logic
+         //const heightInputType = document.getElementById("heightInputTypeSelected");
+         //console.dir(heightInputType);
+         //function dropDownLogic() {
+         //    console.log('val', heightInputType.value);
+         //};
+
+         //weightInputType
+         const weightInputSelector = document.getElementById("weightInputTypeSelected");
+         weightInputSelector.addEventListener("change", weightInputHandler);
+         const weightInput = document.getElementById("weightInput");
+
+         function weightInputHandler() {
+             if (weightInputSelector.value == "Kg") {
+                 weightInput.placeholder = "kg";
+                 return;
+             }
+             weightInput.placeholder = "lbs";
+         }
 
 
-
-         const heightInputType = document.getElementById("heightInputTypeSelected");
-         const valid = document.getElementById("heightInputRequiredValidator");
-         console.dir(heightInputType);
-         function dropDownLogic() {
-             console.log('val', heightInputType.value);
-         };
-
+         //heightInputType ft m cm
+         const heightInputSelector = document.getElementById("heightInputTypeSelected");
+         heightInputTypeSelected.addEventListener("change", heightInputHandler);
+         const heightInput = document.getElementById("heightInput");
+         const heightInputInInches= document.getElementById("heightInputInInches");
+         function heightInputHandler() {
+             if (heightInputSelector.value == "ft") {
+                 heightInput.placeholder = "ft";
+                 heightInputInInches.style.visibility = "visible";
+                 return;
+             }
+             else if (heightInputSelector.value == "m") {
+                 heightInput.placeholder = "m";
+                 heightInputInInches.style.visibility = "hidden";
+                 return;
+             }
+             heightInput.placeholder = "cm";
+             heightInputInInches.style.visibility = "hidden";
+             return
+         }
      </script>
     
 
