@@ -22,16 +22,16 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="../user/BmiCalculation.aspx">BMI</a>
+                        <a class="nav-link active" aria-current="page" href="/User/BmiCalculation.aspx">BMI</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="../user/DisplayDietPlan.aspx">DietPlan</a>
+                        <a class="nav-link active" aria-current="page" href="/User/DisplayDietPlan.aspx">DietPlan</a>
                     </li>
                      <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="../user/CreateDietPlan.aspx">Create DietPlan</a>
+                        <a class="nav-link active" aria-current="page" href="/User/CreateDietPlan.aspx">Create DietPlan</a>
                     </li>
                      <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="../user/BmiCalculation.aspx">DietPlan</a>
+                        <a class="nav-link active" aria-current="page" href="/User/IntakeHistory.aspx">DietPlan</a>
                     </li>
                 </ul>
             </div>

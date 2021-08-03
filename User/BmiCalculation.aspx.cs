@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 
 namespace DietManagement.User
@@ -15,24 +16,26 @@ namespace DietManagement.User
     public partial class BmiCalculation : System.Web.UI.Page
     {
 
-        int weight, age, lbs, gender, ind, demo2;
+        int weight, age, lbs,  DesiredResult;
         float maintananceCalories;
-        double bmi, height, heightInFeets, demo3;
-        String StrUsername, gen, lb, demo1;
-        Boolean CH;
+        double bmi, height, heightInFeets;
+        string UserId, genderFetched, lb;
+        Boolean isLogged = false;
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            //if (Session["Username"] != null)
-            //{
-            //    loggedUser.Text = Session["Username"].ToString();
-            //    StrUsername = Session["Username"].ToString();
-            //}
-            //else
-            //{
-            //    Response.Redirect("~/Authentication/Login.aspx");
-            //}
-            CH = true;
+
+            if (Session["Username"] != null)
+            {
+                loggedUser.Text = Session["Username"].ToString();
+                UserId = Session["UserId"].ToString();
+                isLogged = true;
+            }
+            else
+            {
+                Response.Redirect("~/Authentication/LoginPage.aspx");
+            }
+
 
 
             //datadel();
@@ -43,7 +46,7 @@ namespace DietManagement.User
 
 
 
-        protected void drop()
+        protected void weightDropDown()
         {
             string weightSelectedValue;
 
@@ -53,30 +56,31 @@ namespace DietManagement.User
                 if (weightSelectedValue == "lbs")
                 {
 
-                    demo1 = weightInput.Text;
-                    demo2 = Convert.ToInt32(demo1);
-                    demo3 = Double.Parse((demo2 / 2.205).ToString());
-                    lbs = (int)demo3;
+                    // demo1 = weightInput.Text;
+                    //demo2 = Convert.ToInt32(weightInput.Text);
+                    //demo3 = Double.Parse((Convert.ToInt32(weightInput.Text) / 2.205).ToString());
+                    lbs = (int)Double.Parse((Convert.ToInt32(weightInput.Text) / 2.205).ToString());
                     weight = lbs;
                 }
                 else if (weightSelectedValue == "Kg")
                 {
 
 
-                    demo1 = weightInput.Text;
-                    demo2 = Convert.ToInt32(demo1);
-                    lbs = demo2;
+                    //demo1 = weightInput.Text;
+                    // demo2 = Convert.ToInt32(weightInput.Text);
+                    lbs = Convert.ToInt32(weightInput.Text);
                     weight = lbs;
                 }
             }
             catch (FormatException)
             {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessagee", "alert('Something went wrong please try ageain')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessagee", "alert('Something went wrong please try again.')", true);
             }
         }
-        protected void drop1()
+        protected void heightDropDown()
         {
             int inch, feet;
+           // doube heightInFeets;
             string heightSelectedValue = heightInputTypeSelected.SelectedValue;
             try
             {
@@ -102,72 +106,92 @@ namespace DietManagement.User
             }
             catch (FormatException)
             {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessagee", "alert('Something went wrong please try ageain')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessagee", "alert('Something went wrong please try again.')", true);
             }
         }
-        public void Connection()
+        public void SaveBmi()
         {
             //updating or inserting BMI
             try
             {
                 using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
                 {
+                    connection.Open();
 
-                    SqlCommand cmd1 = new SqlCommand("select * from demo where Username =@Usrname", connection);
-                    cmd1.Parameters.AddWithValue("@Usrname", StrUsername);
-                    SqlDataAdapter da = new SqlDataAdapter(cmd1);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    if (dt.Rows.Count > 0)
+                    SqlCommand cmd1 = new SqlCommand("SELECT * FROM [UserBmi] WHERE UserId=@UserId", connection);
+                    
+                    cmd1.Parameters.AddWithValue("@UserId", UserId);
+                    var found = cmd1.ExecuteScalar();
+                    
+                    if (found != null)
                     {
-                        SqlCommand cmd = new SqlCommand("UPDATE [UserBmi] SET bmiI=@bmii,agee=@age,Catageory=@ca,Food_Catageory=@cat,maintananceCalories=@maintananceCalories WHERE Username=@usrname", connection);
-                        connection.Open();
-                        cmd.Parameters.AddWithValue("usrname", StrUsername);
-                        cmd.Parameters.AddWithValue("@bmii", bmi);
+                        SqlCommand cmd = new SqlCommand("UPDATE [UserBmi] SET BMI=@bmi,Age=@age,FoodCategory=@foodCategory,GenerateDietPlan=@generateDietPlan,MaintananceCalories=@maintananceCalories,Weight=@weight,Height=@height WHERE UserId=@UserId",connection);
+
+                        cmd.Parameters.AddWithValue("@bmi", bmi);
+                        cmd.Parameters.AddWithValue("@age", int.Parse(ageInput.Text));
+                        cmd.Parameters.AddWithValue("@foodCategory", foodCategorySelected.SelectedIndex);
+                        cmd.Parameters.AddWithValue("@generateDietPlan", categoryTypeSelected.SelectedIndex);
                         cmd.Parameters.AddWithValue("@maintananceCalories", maintananceCalories);
-                        cmd.Parameters.AddWithValue("@cat", foodCategorySelected.SelectedIndex);
-                        cmd.Parameters.AddWithValue("@age", age);
-                        cmd.Parameters.AddWithValue("@ca", categoryTypeSelected.SelectedIndex);
-                        cmd.ExecuteNonQuery();
+                        cmd.Parameters.AddWithValue("@weight", int.Parse(weightInput.Text));
+                        cmd.Parameters.AddWithValue("@height", float.Parse(heightInput.Text));
+                        cmd.Parameters.AddWithValue("@userId", UserId.ToString());
+                        var executed = cmd.ExecuteNonQuery();
+
+                        if (executed == 0)
+                        {
+                            errorSavingBmi.Text = "Saved Successfully";
+                            
+                            //throw new Exception("Unable to save data");
+                            return;
+                        }
 
                         errorSavingBmi.Text = "Saved Successfully";
-                        weightInput.Text = "";
-                        heightInput.Text = "";
-                        ageInput.Text = "";
-                        heightInputInInches.Text = "";
+                        return;
 
 
                     }
 
                     else
                     {
-                        SqlCommand cm = new SqlCommand("insert into [UserBmi]" + "(Username,bmiI,agee,Catageory,Food_Catageory,maintananceCalories,weightt,heightt) values(@Usrname,@bmii,@ageE,@Catageory,@Food_Catageory,@maintananceCalories,@weightt,@heightt)", connection);
-                        cm.Parameters.AddWithValue("@Usrname", StrUsername);
-                        cm.Parameters.AddWithValue("@bmii", bmi);
-                        cm.Parameters.AddWithValue("@ageE", age);
-                        cm.Parameters.AddWithValue("@Catageory", categoryTypeSelected.SelectedIndex);
-                        cm.Parameters.AddWithValue("@Food_Catageory", foodCategorySelected.SelectedIndex);
+                        Debug.WriteLine("entered");
+
+                        
+                        SqlCommand cm = new SqlCommand("INSERT INTO [UserBmi] (UserId,BMI,Age,FoodCategory,GenerateDietPlan,MaintananceCalories,Weight,Height) values(@userId,@bmi,@age,@foodCategory,@generateDietPlan,@maintananceCalories,@weight,@height)", connection);
+                        
+                        cm.Parameters.AddWithValue("@userId", UserId);
+                        
+                        cm.Parameters.AddWithValue("@bmi", bmi);
+                        
+                        cm.Parameters.AddWithValue("@age", int.Parse(ageInput.Text));
+                        
+                        cm.Parameters.AddWithValue("@foodCategory", foodCategorySelected.SelectedIndex);
+                        
+                        cm.Parameters.AddWithValue("@generateDietPlan", categoryTypeSelected.SelectedIndex);
+                            
                         cm.Parameters.AddWithValue("@maintananceCalories", maintananceCalories);
-                        cm.Parameters.AddWithValue("@weightt", weight);
-                        cm.Parameters.AddWithValue("@heightt", height);
-                        DataSet bmiidetails = new DataSet();
-                        connection.Open();
-                        SqlDataAdapter dataAdapter = new SqlDataAdapter(cm);
-                        dataAdapter.Fill(bmiidetails);
-
-
-                        errorSavingBmi.Text = "Saved Successfully";
-                        weightInput.Text = "";
-                        heightInput.Text = "";
-                        ageInput.Text = "";
-                        heightInputInInches.Text = "";
+                       
+                        cm.Parameters.AddWithValue("@weight",int.Parse(weightInput.Text));
+                        
+                       
+                        cm.Parameters.AddWithValue("@height", float.Parse(heightInput.Text));
+                        
+                       
+                        var result = cm.ExecuteNonQuery();
+                        if(result != 0)
+                        {
+                            errorSavingBmi.Text = "Saved Successfully";
+                            return;
+                        }
+                        errorSavingBmi.Text = "Unable to save data";
+                        return;
+                        
 
                     }
                 }
             }
             catch (Exception)
             {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessagee", "alert('Something went wrong please try ageain')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessagee", "alert('Something went wrong please try again.')", true);
             }
 
             finally
@@ -176,77 +200,82 @@ namespace DietManagement.User
             }
 
         }
-        public int calculateBMI()
+        public int calculateMaintananceCalories()
         {
+            float calculatedMaintananceCalories;
             //calculating BMI
-            if (ind == 0)
+            if (DesiredResult == 0)
             {
-                maintananceCalories = (lbs * 14) + (lbs * 16);
-                maintananceCalories = maintananceCalories / 2;
+                //Maintian weight 
+                calculatedMaintananceCalories = (lbs * 14) + (lbs * 16);
+                calculatedMaintananceCalories = calculatedMaintananceCalories / 2;
 
             }
-            else if (ind == 1)
+            else if (DesiredResult == 1)
             {
-                maintananceCalories = (lbs * 14) + (lbs * 16);
-                maintananceCalories = (maintananceCalories / 2);
-                maintananceCalories = maintananceCalories - 500;
+                //Weight Loss
+                calculatedMaintananceCalories = (lbs * 14) + (lbs * 16);
+                calculatedMaintananceCalories = (calculatedMaintananceCalories / 2);
+                calculatedMaintananceCalories = calculatedMaintananceCalories - 500;
             }
             else
             {
-                maintananceCalories = (lbs * 14) + (lbs * 16);
-                maintananceCalories = (maintananceCalories / 2);
-                maintananceCalories = maintananceCalories + 500;
+                //Weight Gain
+                calculatedMaintananceCalories = (lbs * 14) + (lbs * 16);
+                calculatedMaintananceCalories = (calculatedMaintananceCalories / 2);
+                calculatedMaintananceCalories = calculatedMaintananceCalories + 500;
             }
-            return (int)maintananceCalories;
+            return (int)calculatedMaintananceCalories;
         }
-        protected void fatt()
+        protected void checkGender()
         {
+            
             //check gender and convert weight to lbs
 
-
-            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-            con.Open();
-            SqlCommand cmd3 = new SqlCommand("select Gender from Reg where Username=@Username", con); //find gender
-            cmd3.Parameters.AddWithValue("Username", StrUsername);
-            SqlDataReader reader = cmd3.ExecuteReader();
-            while (reader.Read())
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
             {
-                gen = reader["Gender"].ToString();
-                gender = Convert.ToInt32(gen);
-            }
-            reader.Close();
-
-            if (gender == 0)
-            {  //find ideal weight according to height
-                SqlCommand cmd1 = new SqlCommand("select Men from Hweightt where heightt=@heightt", con);
-                cmd1.Parameters.AddWithValue("@heightt", height);
-                SqlDataReader reade = cmd1.ExecuteReader();
-                while (reade.Read())
+                
+                con.Open();
+                SqlCommand cmd3 = new SqlCommand("SELECT Gender FROM [User] WHERE UserId=@UserId", con); //find gender
+                cmd3.Parameters.AddWithValue("UserId", UserId);
+                SqlDataReader reader = cmd3.ExecuteReader();
+                while (reader.Read())
                 {
-                    lb = reade["Men"].ToString();
+                    genderFetched = reader["Gender"].ToString();
+                   
                 }
-                reade.Close();
-                lbs = Convert.ToInt32(lb);
-                maintananceCalories = calculateBMI();
-                Connection();
+                reader.Close();
 
+                if (genderFetched == "Male")
+                {  //find ideal weight according to height
+                    SqlCommand cmd1 = new SqlCommand("select Men from [HweightData] where Height=@heightt", con);
+                    cmd1.Parameters.AddWithValue("@heightt", height);
+                    SqlDataReader reade = cmd1.ExecuteReader();
+                    while (reade.Read())
+                    {
+                        lb = reade["Men"].ToString();
+                    }
+                    reade.Close();
+                    lbs = Convert.ToInt32(lb);
+                    maintananceCalories = calculateMaintananceCalories();
+                    SaveBmi();
 
-            }
-            else
-            {
-                SqlCommand cmd1 = new SqlCommand("select Women from Hweightt where heightt=@heightt", con);
-                cmd1.Parameters.AddWithValue("@heightt", height);
-                SqlDataReader reade = cmd1.ExecuteReader();
-                while (reade.Read())
+                }
+                else
                 {
-                    lb = reade["Women"].ToString();
-                    lbs = Int32.Parse(lb);
+                    SqlCommand cmd1 = new SqlCommand("select Women from Hweightt where heightt=@heightt", con);
+                    cmd1.Parameters.AddWithValue("@heightt", height);
+                    SqlDataReader reade = cmd1.ExecuteReader();
+                    while (reade.Read())
+                    {
+                        lb = reade["Women"].ToString();
+                        lbs = int.Parse(lb);
+                    }
+                    reade.Close();
+                    maintananceCalories = calculateMaintananceCalories();
+                    SaveBmi();
                 }
-                reade.Close();
-                maintananceCalories = calculateBMI();
-                Connection();
             }
-            con.Close();
         }
 
 
@@ -259,32 +288,43 @@ namespace DietManagement.User
                 if (Page.IsValid)
                 {
 
-                    if (CH == true) //check if logged
+                    if (isLogged == true) //check if logged
                     {
-                        drop();
-                        drop1();
+                       
+                        weightDropDown();
+                        
+                        heightDropDown();
+                        
                         age = Convert.ToInt32(ageInput.Text);
-                        ind = categoryTypeSelected.SelectedIndex;
+                        
+
+                        DesiredResult = categoryTypeSelected.SelectedIndex;
+
                         bmi = weight / (height * height);
+                       
                         bmiOutput.Text = bmi.ToString();
+                        
                         if (bmi <= 18.4)
                         {
-                            bmiCategory.Text = "bmii shows that you are Underweightt";
-                            fatt();
+                            bmiCategory.Text = "BMI shows that you are Underweight";
+                            checkGender();
                         }
                         else if (bmi >= 25.0)
                         {
-                            bmiCategory.Text = "bmii shows that you are Overweightt";
-                            fatt();
+                            bmiCategory.Text = "BMI shows that you are Overweight";
+                            checkGender();
                         }
 
                         if (bmi > 18.4 && bmi < 25.0)
                         {
-                            demo3 = weight * 2.205;
-                            lbs = (int)demo3;
-                            bmiCategory.Text = "bmii normal";
-                            maintananceCalories = calculateBMI();
-                            Connection();
+                            //demo3 = weight * 2.205;
+                            lbs = (int)(weight * 2.205);
+                            bmiCategory.Text = "BMI normal";
+
+                            maintananceCalories = calculateMaintananceCalories();
+
+                            SaveBmi();
+
 
                         }
                     }
@@ -292,7 +332,7 @@ namespace DietManagement.User
             }
             catch (Exception)
             {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessagee", "alert('Something went wrong please try ageain')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessagee", "alert('Something went wrong please try again.')", true);
             }
         }
 
@@ -305,29 +345,29 @@ namespace DietManagement.User
 
 
 
-        protected void datadel()
-        {
-            try
-            {
-                DateTime dt;
-                dt = DateTime.Today.AddDays(-6);
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-                con.Open();
-                SqlCommand cmd = new SqlCommand("Delete From Intake_History where Username=@User and Datetime<@date", con);
-                SqlCommand cmd1 = new SqlCommand("Delete From Intake where Username=@User and Datetime<@date", con);
-                cmd.Parameters.AddWithValue("@User", StrUsername);
-                cmd.Parameters.AddWithValue("@date", dt);
-                cmd1.Parameters.AddWithValue("@User", StrUsername);
-                cmd1.Parameters.AddWithValue("@date", dt);
-                cmd.ExecuteNonQuery();
-                cmd1.ExecuteNonQuery();
-                con.Close();
-            }
-            catch
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessagee", "alert('Something went wrong please try ageain')", true);
-            }
-        }
+        //protected void datadel()
+        //{
+        //    try
+        //    {
+        //        DateTime dt;
+        //        dt = DateTime.Today.AddDays(-6);
+        //        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
+        //        con.Open();
+        //        SqlCommand cmd = new SqlCommand("Delete From Intake_History where Username=@User and Datetime<@date", con);
+        //        SqlCommand cmd1 = new SqlCommand("Delete From Intake where Username=@User and Datetime<@date", con);
+        //        cmd.Parameters.AddWithValue("@User", UserId);
+        //        cmd.Parameters.AddWithValue("@date", dt);
+        //        cmd1.Parameters.AddWithValue("@User", UserId);
+        //        cmd1.Parameters.AddWithValue("@date", dt);
+        //        cmd.ExecuteNonQuery();
+        //        cmd1.ExecuteNonQuery();
+        //        con.Close();
+        //    }
+        //    catch
+        //    {
+        //        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessagee", "alert('Something went wrong please try ageain')", true);
+        //    }
+        //}
 
 
 

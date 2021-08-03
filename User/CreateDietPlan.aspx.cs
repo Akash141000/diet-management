@@ -14,9 +14,9 @@ namespace DietManagement.User
 {
     public partial class CreateDietPlan : System.Web.UI.Page
     {
-        string strUser;
-        String abc, Maint, Weig, bcdc, str1;
-        int mai, weight, cat;
+        string strUser,UserId;
+        String generateDietPlanId, Maint, Weig, bcdc, str1;
+        int mai, weight, foodCategory;
         double weigh;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -25,13 +25,12 @@ namespace DietManagement.User
             if (Session["Username"] != null)
             {
                 Label7.Text = Session["Username"].ToString();
+                UserId = Session["UserId"].ToString();
                 strUser = Session["Username"].ToString();
-
-
             }
             else
             {
-                Response.Redirect("Login.aspx");
+                Response.Redirect("/Authentication/LoginPage.aspx");
             }
             Bmi();
 
@@ -43,36 +42,38 @@ namespace DietManagement.User
         {
             try
             {
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-                SqlCommand cmd = new SqlCommand("select BMI,Maintanance,Catagory,Weight,Food_Catagory from demo where Username=@user", con);
-                cmd.Parameters.AddWithValue("@user", strUser);
-                con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT BMI,MaintananceCalories,GenerateDietPlan,Weight,FoodCategory FROM [UserBmi] WHERE UserId=@userId", con);
+                    cmd.Parameters.AddWithValue("@userId", UserId);
 
-                reader.Read();
-                bmiValue.Text = reader["BMI"].ToString();
-                maintananceCaloriesValue.Text = reader["Maintanance"].ToString();
-                abc = reader["Catagory"].ToString();
-                Weig = reader["Weight"].ToString();
-                weight = Int16.Parse(Weig);
-                bcdc = reader["Food_Catagory"].ToString();
-                cat = Convert.ToInt32(bcdc);
-                Maint = maintananceCaloriesValue.Text;
-                mai = Int16.Parse(Maint);
-                int bcd = Int16.Parse(abc);
-                if (cat != 1)
-                {
-                    foodCategoryValue.Text = "veg";
-                }
-                else
-                {
-                    foodCategoryValue.Text = "Non-Veg";
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    reader.Read();
+                    bmiValue.Text = reader["BMI"].ToString();
+                    maintananceCaloriesValue.Text = reader["MaintananceCalories"].ToString();
+                    generateDietPlanId = reader["GenerateDietPlan"].ToString();
+                  
+                    weight = int.Parse(reader["Weight"].ToString());
+
+                    foodCategory = int.Parse(reader["FoodCategory"].ToString());
+                    mai = int.Parse(maintananceCaloriesValue.Text);
+                    //int bcd = int.Parse(generateDietPlanId);
+                    if (foodCategory != 1)
+                    {
+                        foodCategoryValue.Text = "veg";
+                    }
+                    else
+                    {
+                        foodCategoryValue.Text = "Non-Veg";
+                    }
                 }
             }
             catch (Exception)
             {
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
-                Response.Redirect("BMI.aspx");
+                Response.Redirect("/User/BmiCalculation.aspx");
             }
             check();
             Grid1();
@@ -94,9 +95,9 @@ namespace DietManagement.User
             int calc = mai - (calf + calp);
             int carbs = calc / 4;
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-            SqlCommand cm = new SqlCommand("UPDATE demo SET Protein=@Protein,Carbs=@Carbs,Fat=@Fat WHERE Username=@Username", con);
+            SqlCommand cm = new SqlCommand("UPDATE [UserBmi] SET ProteinRequired=@Protein,CarbsRequired=@Carbs,FatsRequired=@Fat WHERE UserId=@userId", con);
             con.Open();
-            cm.Parameters.AddWithValue("@Username", strUser);
+            cm.Parameters.AddWithValue("@userId", UserId);
             cm.Parameters.AddWithValue("@Protein", prote);
             cm.Parameters.AddWithValue("@Carbs", carbs);
             cm.Parameters.AddWithValue("@Fat", fa);
@@ -125,7 +126,7 @@ namespace DietManagement.User
 
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
             con.Open();
-            SqlCommand cmd = new SqlCommand("insert into Dietplan" + "(Username,Food,Time,Protein,Carbohydrate,Total_Fat,Calories) values(@Username,@Food,@Time,@Protein,@Carbohydrate,@Total_Fat,@Calories)", con);
+            SqlCommand cmd = new SqlCommand("insert into [Dietplan]" + "(Username,Food,Time,Protein,Carbohydrate,Total_Fat,Calories) values(@Username,@Food,@Time,@Protein,@Carbohydrate,@Total_Fat,@Calories)", con);
             cmd.Parameters.AddWithValue("@Username", strUser);
             cmd.Parameters.AddWithValue("@Food", Food);
             cmd.Parameters.AddWithValue("@Time", Time);
@@ -158,7 +159,7 @@ namespace DietManagement.User
 
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
             con.Open();
-            SqlCommand cmd = new SqlCommand("insert into Dietplan" + "(Username,Food,Time,Protein,Carbohydrate,Total_Fat,Calories) values(@Username,@Food,@Time,@Protein,@Carbohydrate,@Total_Fat,@Calories)", con);
+            SqlCommand cmd = new SqlCommand("insert into [Dietplan]" + "(Username,Food,Time,Protein,Carbohydrate,Total_Fat,Calories) values(@Username,@Food,@Time,@Protein,@Carbohydrate,@Total_Fat,@Calories)", con);
             cmd.Parameters.AddWithValue("@Username", strUser);
             cmd.Parameters.AddWithValue("@Food", Food);
             cmd.Parameters.AddWithValue("@Time", Time);
@@ -187,7 +188,7 @@ namespace DietManagement.User
 
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
             con.Open();
-            SqlCommand cmd = new SqlCommand("insert into Dietplan" + "(Username,Food,Time,Protein,Carbohydrate,Total_Fat,Calories) values(@Username,@Food,@Time,@Protein,@Carbohydrate,@Total_Fat,@Calories)", con);
+            SqlCommand cmd = new SqlCommand("insert into [Dietplan]" + "(Username,Food,Time,Protein,Carbohydrate,Total_Fat,Calories) values(@Username,@Food,@Time,@Protein,@Carbohydrate,@Total_Fat,@Calories)", con);
             cmd.Parameters.AddWithValue("@Username", strUser);
             cmd.Parameters.AddWithValue("@Food", Food);
             cmd.Parameters.AddWithValue("@Time", Time);
@@ -218,7 +219,7 @@ namespace DietManagement.User
 
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
             con.Open();
-            SqlCommand cmd = new SqlCommand("insert into Dietplan" + "(Username,Food,Time,Protein,Carbohydrate,Total_Fat,Calories) values(@Username,@Food,@Time,@Protein,@Carbohydrate,@Total_Fat,@Calories)", con);
+            SqlCommand cmd = new SqlCommand("insert into [Dietplan]" + "(Username,Food,Time,Protein,Carbohydrate,Total_Fat,Calories) values(@Username,@Food,@Time,@Protein,@Carbohydrate,@Total_Fat,@Calories)", con);
             cmd.Parameters.AddWithValue("@Username", strUser);
             cmd.Parameters.AddWithValue("@Food", Food);
             cmd.Parameters.AddWithValue("@Time", Time);
@@ -305,7 +306,7 @@ namespace DietManagement.User
 
 
 
-            if (cat != 1)
+            if (foodCategory != 1)
             {
                 str1 = gstr1;
 

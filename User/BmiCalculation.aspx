@@ -3,7 +3,7 @@
     Inherits="DietManagement.User.BmiCalculation" %>
 
 
-<asp:Content  runat="server" ContentPlaceHolderID="head">
+<asp:Content runat="server" ContentPlaceHolderID="head">
     <title>BMI</title>
     <meta
         name="viewport"
@@ -15,12 +15,12 @@
         src="../Bootstrap-5/css/js/bootstrap.bundle.min.js"></script>
 
 
-    
+
 
 </asp:Content>
 
 <asp:Content runat="server" ContentPlaceHolderID="MainContentPlaceHolder">
-   
+
 
 
 
@@ -122,9 +122,8 @@
                                             runat="server"
                                             AutoPostBack="false"
                                             class="form-control"
-                                            
                                             ValidationGroup="v2">
-                                            <asp:ListItem>ft</asp:ListItem>
+                                            <asp:ListItem Selected="True">ft</asp:ListItem>
                                             <asp:ListItem>m</asp:ListItem>
                                             <asp:ListItem>cm</asp:ListItem>
                                         </asp:DropDownList>
@@ -148,7 +147,7 @@
                                         ErrorMessage="Required!">
                                     </asp:RequiredFieldValidator>
 
-                                    <asp:RegularExpressionValidator
+                                    <%--<asp:RegularExpressionValidator
                                         ID="heightInputRegex"
                                         Enabled="true"
                                         runat="server"
@@ -157,7 +156,9 @@
                                         Display="Dynamic"
                                         ErrorMessage="Invalid Input!"
                                         SetFocusOnError="True">
-                                    </asp:RegularExpressionValidator>
+                                    </asp:RegularExpressionValidator>--%>
+
+                                    <asp:CustomValidator ID="heightInputCustomValidator" runat="server" ClientValidationFunction="customValidatorHeight" Display="Dynamic" ControlToValidate="heightInput" ErrorMessage="Invalid Input!" SetFocusOnError="true"></asp:CustomValidator>
 
                                     <%--<asp:RegularExpressionValidator
                                         ID="heightInputRegex2"
@@ -180,7 +181,7 @@
                                         ErrorMessage="Invalid Input!">
                                     </asp:RangeValidator>
 
-                                    <asp:RangeValidator
+                                   <%-- <asp:RangeValidator
                                         ID="heightInputRangeValidator"
                                         runat="server"
                                         ControlToValidate="heightInput"
@@ -188,9 +189,9 @@
                                         MaximumValue="6"
                                         Display="Dynamic"
                                         ErrorMessage="Invalid Input!">
-                                    </asp:RangeValidator>
+                                    </asp:RangeValidator>--%>
 
-                                    
+
                                 </span>
                             </div>
                         </div>
@@ -312,80 +313,119 @@
         </form>
     </div>
 
-     <script async="async" defer="defer" type="text/javascript">
-         //$(document).ready(function () {
-         //    $('[data-toggle="tooltip"]').tooltip();
-         //});
+    <script async="async" defer="defer" type="text/javascript">
+        //$(document).ready(function () {
+        //    $('[data-toggle="tooltip"]').tooltip();
+        //});
 
-         //weightInputType
-         //onLoading();
-         const weightInputSelector = document.getElementById("weightInputTypeSelected");
-         weightInputSelector.addEventListener("change", weightInputHandler);
-         const weightInput = document.getElementById("weightInput");
+        //weightInputType
+        
+        const weightInputSelector = document.getElementById("weightInputTypeSelected");
+        weightInputSelector.addEventListener("change", weightInputHandler);
+        const weightInput = document.getElementById("weightInput");
 
-         function weightInputHandler() {
-             if (weightInputSelector.value == "Kg") {
-                 weightInput.placeholder = "kg";
-                 return;
-             }
-             weightInput.placeholder = "lbs";
-         }
-
-
-         //heightInputType ft m cm
-         let heightInputSelector = document.getElementById("heightInputTypeSelected");
-         heightInputTypeSelected.addEventListener("change", heightInputHandler);
-         //input Fields
-         let heightInput = document.getElementById("heightInput");
-         let heightInputInInches = document.getElementById("heightInputInInches");
-         //required Validator
-          let heightInputRv = document.getElementById("heightInputRequiredValidator");
-         let heightInputInchesRv = document.getElementById("heightInputRequiredValidatorInches");
-         //regex validator
-         let heightInputRgx = document.getElementById("heightInputRegex");
-         //range validator
-         let heightInputRv = document.getElementById("heightInputRangeValidator");
-         let heightInputRvInches = document.getElementById("heightInputRangeValidatorFeetInches");
-
-         function heightInputHandler() {
-             if (heightInputSelector.value == "ft") {
-                 heightInput.placeholder = "ft";
-                 heightInputInInches.style.visibility = "visible";
-                 //heightInputInchesRequiredValidator.enabled = true;
-                 //heightInputRegex.ValidateExpression = "^[0-9]*[1-9][0-9]*$";
-                 //heightInputRangeValidator.MinimumValue = "4";
-                 //heightInputRangeValidator.MaximumValue = "6";
-                 return;
-             }
-             else if (heightInputSelector.value == "m") {
-                 heightInput.placeholder = "m";
-                 heightInputInInches.style.visibility = "hidden";
-                 
-                 //heightInputInchesRequiredValidator.enabled = false;
-                 //heightInputRegex.ValidateExpression = "[0-9]([.,][0-9]{1,2})?$";
-                 //heightInputRangeValidatorInches.enabled = false;
-                 //heightInputRangeValidator.MinimumValue = "1.47";
-                 //heightInputRangeValidator.MaximumValue = "1.98";
-                 return;
-             }
-             heightInput.placeholder = "cm";
-             heightInputInInches.style.visibility = "hidden";
-             //heightInputInchesRequiredValidator.enabled = false;
-             //heightInputRegex.ValidateExpression = "[0-9]([.,][0-9]{1,2})?$";
-             //heightInputRangeValidatorInches.enabled = false;
-             //heightInputRangeValidator.MinimumValue = "147";
-             //heightInputRangeValidator.MaximumValue = "198";
-             return;
-         }
+        function weightInputHandler() {
+            if (weightInputSelector.value == "Kg") {
+                weightInput.placeholder = "kg";
+                return;
+            }
+            weightInput.placeholder = "lbs";
+        }
 
 
-         //async function onLoading() {
-         //    heightInputInInches.style.visibility = "visible";
-         //    heightInputInchesRequiredValidator.enable = true;
-         //    heightInputRangeValidator.enable = true;
-         //    heightInputRangeValidatorInches.enable = true;
-         //}
-     </script>
-    
+        //heightInputType ft m cm
+        const heightInputSelector = document.getElementById("heightInputTypeSelected");
+        heightInputTypeSelected.addEventListener("change", heightInputHandler);
+        //input Fields
+        const heightInput = document.getElementById("heightInput");
+        const heightInputInInches = document.getElementById("heightInputInInches");
+        //required Validator
+        const heightInputReqV = document.getElementById("heightInputRequiredValidator");
+        const heightInputInchesReqV = document.getElementById("heightInputRequiredValidatorInches");
+        //regex validator
+        const heightInputRgx = document.getElementById("heightInputCustomValidator");
+        //range validator
+       // const heightInputRngV = document.getElementById("heightInputRangeValidator");
+        const heightInputFeetsRngV = document.getElementById("heightInputRangeValidatorFeetInches");
+
+        function heightInputHandler() {
+            if (heightInputSelector.value == "ft") {
+                heightInput.placeholder = "ft";
+                heightInputInInches.style.visibility = "visible";
+                heightInputInchesReqV.enabled = true;
+               
+                //heightInputRegex.ValidateExpression = "^[0-9]*[1-9][0-9]*$";
+                
+                return;
+            }
+            else if (heightInputSelector.value == "m") {
+                heightInput.placeholder = "m";
+                heightInputInInches.style.visibility = "hidden";
+                heightInputInchesReqV.enabled = false;
+               
+                //heightInputRegex.ValidateExpression = "[0-9]([.,][0-9]{1,2})?$";
+                return;
+            }
+            heightInput.placeholder = "cm";
+            heightInputInInches.style.visibility = "hidden";
+            heightInputInchesReqV.enabled = false;
+            
+            //heightInputRegex.ValidateExpression = "[0-9]([.,][0-9]{1,2})?$";
+            return;
+        }
+
+
+        function customValidatorHeight(source, arguments) {
+            var heightInputFeetsRgx = new RegExp("^[0 - 9]*[1 - 9][0 - 9]*$");
+            var heightInputRgx = new RegExp("[0 - 9]([.,][0 - 9]{ 1, 2})?$");
+            if (heightInputSelector.value == "ft") {
+                const input = parseInt(arguments.Value);
+                if (input >= 4 && input <= 6) {
+                    arguments.IsValid = true;
+                    return;
+                }
+                arguments.IsValid = false;
+                return;
+
+
+                //if (heightInputFeetsRgx.test(arguments.Value)) {
+                //    arguments.IsValid = true;
+
+                //}
+                //arguments.IsValid = false;
+            }
+            else {
+                if (heightInputSelector.value == "m") {
+                    const input = parseFloat(arguments.Value);
+                  
+                    if (input >= 1.47 && input <= 1.98) {
+
+                        arguments.IsValid = true;
+                        return;
+                    }
+                    arguments.IsValid = false;
+                    return;
+                }
+                else {
+                    const input = parseInt(arguments.Value);
+                    if (input > 147 && input <= 198) {
+                        arguments.IsValid = true;
+                        return;
+                    }
+                    arguments.IsValid = false;
+                    return;}
+                
+                
+                //if (heightInputRgx.test(arguments.Value)) {
+                //    arguments.IsValid = true;
+
+                //}
+                //arguments.IsValid = false;
+            }
+            
+        }
+
+    </script>
+
 
 </asp:Content>

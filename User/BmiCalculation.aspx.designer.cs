@@ -123,13 +123,13 @@ namespace DietManagement.User
         protected global::System.Web.UI.WebControls.RequiredFieldValidator heightInputRequiredValidatorInches;
 
         /// <summary>
-        /// heightInputRegex control.
+        /// heightInputCustomValidator control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator heightInputRegex;
+        protected global::System.Web.UI.WebControls.CustomValidator heightInputCustomValidator;
 
         /// <summary>
         /// heightInputRangeValidatorInches control.
@@ -139,15 +139,6 @@ namespace DietManagement.User
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator heightInputRangeValidatorInches;
-
-        /// <summary>
-        /// heightInputRangeValidator control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator heightInputRangeValidator;
 
         /// <summary>
         /// AgeLabel control.

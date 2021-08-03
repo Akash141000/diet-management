@@ -13,7 +13,7 @@ namespace DietManagement.User
     public partial class DisplayDietPlan : System.Web.UI.Page
     {
         int ma = 0, calorie;
-        String Struser, def;
+        String Struser,UserId,def;
         protected void Page_Load(object sender, EventArgs e)
         {
             try
@@ -22,57 +22,57 @@ namespace DietManagement.User
                 {
 
                     Struser = Session["Username"].ToString();
+                    UserId = Session["UserId"].ToString();
                     Label5.Text = Struser;
                 }
                 else
                 {
-                    Response.Redirect("Login.aspx");
+                    Response.Redirect("~/Authentication/LoginPage.aspx");
                 }
 
                 check();
 
                 ca();
-
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-                SqlCommand cmd = new SqlCommand(def, con);
-                SqlCommand cd = new SqlCommand(def, con);
-                SqlCommand cm = new SqlCommand(def, con);
-                SqlCommand cmd1 = new SqlCommand(def, con);
-                cmd.Parameters.AddWithValue("@cal", calorie);
-                cmd.Parameters.AddWithValue("@time", "Breakfast");
-                cd.Parameters.AddWithValue("@cal", calorie);
-                cd.Parameters.AddWithValue("@time", "Lunch");
-                cm.Parameters.AddWithValue("@cal", calorie);
-                cm.Parameters.AddWithValue("@time", "Snack");
-                cmd1.Parameters.AddWithValue("@cal", calorie);
-                cmd1.Parameters.AddWithValue("@time", "Dinner");
-                con.Open();
-                SqlDataReader r;
-                SqlDataReader s;
-                SqlDataReader t;
-                SqlDataReader u;
-                r = cmd.ExecuteReader();
-                breakFastGridView.DataSource = r;
-                breakFastGridView.DataBind();
-                r.Close();
-                s = cd.ExecuteReader();
-                lunchGridView.DataSource = s;
-                lunchGridView.DataBind();
-                s.Close();
-                t = cm.ExecuteReader();
-                snackGridView.DataSource = t;
-                snackGridView.DataBind();
-                t.Close();
-                u = cmd1.ExecuteReader();
-                dinnerGridView.DataSource = u;
-                dinnerGridView.DataBind();
-                u.Close();
-                con.Close();
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
+                {
+                    SqlCommand cmd = new SqlCommand(def, con);
+                    SqlCommand cd = new SqlCommand(def, con);
+                    SqlCommand cm = new SqlCommand(def, con);
+                    SqlCommand cmd1 = new SqlCommand(def, con);
+                    cmd.Parameters.AddWithValue("@cal", calorie);
+                    cmd.Parameters.AddWithValue("@time", "Breakfast");
+                    cd.Parameters.AddWithValue("@cal", calorie);
+                    cd.Parameters.AddWithValue("@time", "Lunch");
+                    cm.Parameters.AddWithValue("@cal", calorie);
+                    cm.Parameters.AddWithValue("@time", "Snack");
+                    cmd1.Parameters.AddWithValue("@cal", calorie);
+                    cmd1.Parameters.AddWithValue("@time", "Dinner");
+                    con.Open();
+                    SqlDataReader r = cmd.ExecuteReader();
+                    SqlDataReader s = cd.ExecuteReader();
+                    SqlDataReader t = cm.ExecuteReader();
+                    SqlDataReader u = cmd1.ExecuteReader(); 
+                    breakFastGridView.DataSource = r;
+                    breakFastGridView.DataBind();
+                    r.Close();
+                    lunchGridView.DataSource = s;
+                    lunchGridView.DataBind();
+                    s.Close();
+                    snackGridView.DataSource = t;
+                    snackGridView.DataBind();
+                    t.Close();
+                    dinnerGridView.DataSource = u;
+                    dinnerGridView.DataBind();
+                    u.Close();
+                }
+               
+                
+               
             }
             catch (NullReferenceException)
             {
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
-                Response.Redirect("BMI.aspx");
+                Response.Redirect("/User/BmiCalculation.aspx");
             }
 
         }
@@ -131,16 +131,16 @@ namespace DietManagement.User
                 int i;
                 SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
                 con.Open();
-                SqlCommand cmd = new SqlCommand("select * from demo where Username=@Username ", con);
-                cmd.Parameters.AddWithValue("@Username", Struser);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM [UserBmi] WHERE UserId=@UserId ", con);
+                cmd.Parameters.AddWithValue("@userId", UserId);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 con.Close();
                 if (dt.Rows.Count > 0)
                 {
-                    SqlCommand cmd1 = new SqlCommand("select Maintanance,Food_Catagory from demo where Username=@Username ", con);
-                    cmd1.Parameters.AddWithValue("@Username", Struser);
+                    SqlCommand cmd1 = new SqlCommand("SELECT MaintananceCalories,FoodCategory FROM [UserBmi] WHERE UserId=@UserId ", con);
+                    cmd1.Parameters.AddWithValue("@userId", UserId);
                     con.Open();
                     SqlDataReader read = cmd1.ExecuteReader();
                     read.Read();
@@ -152,11 +152,11 @@ namespace DietManagement.User
                     con.Close();
                     if (i == 0)
                     {
-                        def = "select Food,Quantity from Diet where calories=@cal and Time=@time;";
+                        def = "SELECT Food,Quantity FROM [NDiet] WHERE calories=@cal and Time=@time;";
                     }
                     else
                     {
-                        def = "select Food,Quantity from NDiet where calories=@cal and Time=@time;";
+                        def = "SELECT Food,Quantity FROM [NDiet] WHERE calories=@cal and Time=@time;";
                     }
                 }
 

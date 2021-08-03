@@ -69,7 +69,8 @@ namespace DietManagement
                         }
 
                         Session["Username"] = usernameInput.Text.ToString();
-                        Response.Redirect("~/User/BmiCalculation.aspx");
+                        Session["UserId"] = logged.ToString();
+                        Response.Redirect("../User/BmiCalculation.aspx");
                         return;
                         //SqlDataAdapter da = new SqlDataAdapter(cmd);
                         //DataTable dt = new DataTable();
@@ -108,6 +109,8 @@ namespace DietManagement
                 byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(pass);
                 byte[] hash = md5.ComputeHash(inputBytes);
                 StringBuilder sb = new StringBuilder();
+
+
                 for (int i = 0; i < hash.Length; i++)
                 {
                     hs[i] = hash[i];
