@@ -16,7 +16,7 @@ namespace DietManagement.User
     public partial class BmiCalculation : System.Web.UI.Page
     {
 
-        int weight, age, lbs,  DesiredResult;
+        int weight,lbs,DesiredResult;
         float maintananceCalories;
         double bmi, height, heightInFeets;
         string UserId, genderFetched, lb;
@@ -25,7 +25,7 @@ namespace DietManagement.User
         {
 
 
-            if (Session["Username"] != null)
+            if (Session["Username"] != null && Session["UserId"] != null)
             {
                 loggedUser.Text = Session["Username"].ToString();
                 UserId = Session["UserId"].ToString();
@@ -119,13 +119,13 @@ namespace DietManagement.User
                     connection.Open();
 
                     SqlCommand cmd1 = new SqlCommand("SELECT * FROM [UserBmi] WHERE UserId=@UserId", connection);
-                    
+
                     cmd1.Parameters.AddWithValue("@UserId", UserId);
                     var found = cmd1.ExecuteScalar();
-                    
+
                     if (found != null)
                     {
-                        SqlCommand cmd = new SqlCommand("UPDATE [UserBmi] SET BMI=@bmi,Age=@age,FoodCategory=@foodCategory,GenerateDietPlan=@generateDietPlan,MaintananceCalories=@maintananceCalories,Weight=@weight,Height=@height WHERE UserId=@UserId",connection);
+                        SqlCommand cmd = new SqlCommand("UPDATE [UserBmi] SET BMI=@bmi,Age=@age,FoodCategory=@foodCategory,GenerateDietPlan=@generateDietPlan,MaintananceCalories=@maintananceCalories,Weight=@weight,Height=@height WHERE UserId=@UserId", connection);
 
                         cmd.Parameters.AddWithValue("@bmi", bmi);
                         cmd.Parameters.AddWithValue("@age", int.Parse(ageInput.Text));
@@ -140,7 +140,7 @@ namespace DietManagement.User
                         if (executed == 0)
                         {
                             errorSavingBmi.Text = "Error saving";
-                            
+
                             //throw new Exception("Unable to save data");
                             return;
                         }
@@ -155,36 +155,36 @@ namespace DietManagement.User
                     {
                         Debug.WriteLine("entered");
 
-                        
+
                         SqlCommand cm = new SqlCommand("INSERT INTO [UserBmi] (UserId,BMI,Age,FoodCategory,GenerateDietPlan,MaintananceCalories,Weight,Height) values(@userId,@bmi,@age,@foodCategory,@generateDietPlan,@maintananceCalories,@weight,@height)", connection);
-                        
+
                         cm.Parameters.AddWithValue("@userId", UserId);
-                        
+
                         cm.Parameters.AddWithValue("@bmi", bmi);
-                        
+
                         cm.Parameters.AddWithValue("@age", int.Parse(ageInput.Text));
-                        
+
                         cm.Parameters.AddWithValue("@foodCategory", foodCategorySelected.SelectedIndex);
-                        
+
                         cm.Parameters.AddWithValue("@generateDietPlan", categoryTypeSelected.SelectedIndex);
-                            
+
                         cm.Parameters.AddWithValue("@maintananceCalories", maintananceCalories);
-                       
-                        cm.Parameters.AddWithValue("@weight",int.Parse(weightInput.Text));
-                        
-                       
+
+                        cm.Parameters.AddWithValue("@weight", int.Parse(weightInput.Text));
+
+
                         cm.Parameters.AddWithValue("@height", float.Parse(heightInput.Text));
-                        
-                       
+
+
                         var result = cm.ExecuteNonQuery();
-                        if(result != 0)
+                        if (result != 0)
                         {
                             errorSavingBmi.Text = "Saved Successfully";
                             return;
                         }
                         errorSavingBmi.Text = "Unable to save data";
                         return;
-                        
+
 
                     }
                 }
@@ -192,11 +192,6 @@ namespace DietManagement.User
             catch (Exception)
             {
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessagee", "alert('Something went wrong please try again.')", true);
-            }
-
-            finally
-            {
-                Session["maintananceCalories"] = maintananceCalories.ToString();
             }
 
         }
@@ -295,9 +290,6 @@ namespace DietManagement.User
                         
                         heightDropDown();
                         
-                        age = Convert.ToInt32(ageInput.Text);
-                        
-
                         DesiredResult = categoryTypeSelected.SelectedIndex;
 
                         bmi = weight / (height * height);
@@ -317,7 +309,6 @@ namespace DietManagement.User
 
                         if (bmi > 18.4 && bmi < 25.0)
                         {
-                            //demo3 = weight * 2.205;
                             lbs = (int)(weight * 2.205);
                             bmiCategory.Text = "BMI normal";
 

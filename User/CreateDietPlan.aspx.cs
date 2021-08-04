@@ -14,18 +14,18 @@ namespace DietManagement.User
 {
     public partial class CreateDietPlan : System.Web.UI.Page
     {
-        string strUser, UserId;
+        string loggedUser, UserId;
         string generateDietPlanId, DietPlanType;
         int maintananceCalories, weight, foodCategory;
 
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            if (Session["UserId"] != null && Session["Username"] != null)
+            if (Session["Username"] != null && Session["UserId"] != null)
             {
                 Label7.Text = Session["Username"].ToString();
                 UserId = Session["UserId"].ToString();
-                strUser = Session["Username"].ToString();
+                loggedUser = Session["Username"].ToString();
             }
             else
             {
@@ -57,8 +57,8 @@ namespace DietManagement.User
 
         protected void Bmi()
         {
-            //try
-            //{
+            try
+            {
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
                 {
                     con.Open();
@@ -85,12 +85,12 @@ namespace DietManagement.User
                 }
                 checkFoodCategory();
                 GridOutput();
-            //}
-            //catch (Exception)
-            //{
-            //    //ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
-            //    //Response.Redirect("/User/BmiCalculation.aspx");
-            //}
+            }
+            catch (Exception)
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
+                
+            }
 
         }
 
@@ -164,15 +164,9 @@ namespace DietManagement.User
                 cmd.Parameters.AddWithValue("@Fat", fats);
                 cmd.ExecuteNonQuery();
             }
-            Response.Redirect("Cdisplay.aspx"); //change
+            Response.Redirect("/User/customDietPlanDisplay.aspx"); 
 
-            //int protein = (int)((weight * 2.205) * 1.3);
-            //int calp = prote * 4;
-            //int fa = ((maintananceCalories * 15 % 100) + (maintananceCalories * 25 % 100)) / 2;
-
-            //int calf = fa * 9;
-            //int calc = maintananceCalories - (calf + calp);
-            //int carbs = calc / 4;
+            
         }
         protected void breakfastGridView_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -192,7 +186,7 @@ namespace DietManagement.User
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand("INSERT INTO [Dietplan] (Username,Food,Time,Protein,Carbohydrate,Total_Fat,Calories) values(@Username,@Food,@Time,@Protein,@Carbohydrate,@Total_Fat,@Calories)", con);
-                cmd.Parameters.AddWithValue("@Username", strUser);
+                cmd.Parameters.AddWithValue("@Username", loggedUser);
                 cmd.Parameters.AddWithValue("@Food", Food);
                 cmd.Parameters.AddWithValue("@Time", Time);
                 cmd.Parameters.AddWithValue("@Protein", Protein);
@@ -220,7 +214,7 @@ namespace DietManagement.User
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand("INSERT INTO [Dietplan] (Username,Food,Time,Protein,Carbohydrate,Total_Fat,Calories) values(@Username,@Food,@Time,@Protein,@Carbohydrate,@Total_Fat,@Calories)", con);
-                cmd.Parameters.AddWithValue("@Username", strUser);
+                cmd.Parameters.AddWithValue("@Username", loggedUser);
                 cmd.Parameters.AddWithValue("@Food", Food);
                 cmd.Parameters.AddWithValue("@Time", Time);
                 cmd.Parameters.AddWithValue("@Protein", Protein);
@@ -249,7 +243,7 @@ namespace DietManagement.User
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand("INSERT INTO [Dietplan] (Username,Food,Time,Protein,Carbohydrate,Total_Fat,Calories) values(@Username,@Food,@Time,@Protein,@Carbohydrate,@Total_Fat,@Calories)", con);
-                cmd.Parameters.AddWithValue("@Username", strUser);
+                cmd.Parameters.AddWithValue("@Username", loggedUser);
                 cmd.Parameters.AddWithValue("@Food", Food);
                 cmd.Parameters.AddWithValue("@Time", Time);
                 cmd.Parameters.AddWithValue("@Protein", Protein);
@@ -277,7 +271,7 @@ namespace DietManagement.User
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand("INSERT INTO [Dietplan] (Username,Food,Time,Protein,Carbohydrate,Total_Fat,Calories) values(@Username,@Food,@Time,@Protein,@Carbohydrate,@Total_Fat,@Calories)", con);
-                cmd.Parameters.AddWithValue("@Username", strUser);
+                cmd.Parameters.AddWithValue("@Username", loggedUser);
                 cmd.Parameters.AddWithValue("@Food", Food);
                 cmd.Parameters.AddWithValue("@Time", Time);
                 cmd.Parameters.AddWithValue("@Protein", Protein);
@@ -288,77 +282,6 @@ namespace DietManagement.User
             }
         }
 
-
-
-       
-
-        
-
-
-
-        //protected void Grid1()
-        //{
-        //    string time = "breakfast";
-        //    SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-        //    con.Open();
-        //    SqlCommand cmd = new SqlCommand(DietPlanType, con);
-
-        //    cmd.Parameters.AddWithValue("@typ", time);
-        //    SqlDataReader r;
-        //    r = cmd.ExecuteReader();
-        //    breakfastGridView.DataSource = r;
-        //    breakfastGridView.DataBind();
-        //    r.Close();
-        //    con.Close();
-
-
-
-        //}
-        //protected void Grid2()
-        //{
-        //    string time = "lunch";
-        //    SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-        //    con.Open();
-        //    SqlCommand cmd = new SqlCommand(DietPlanType, con);
-
-        //    cmd.Parameters.AddWithValue("@typ", time);
-        //    SqlDataReader s;
-        //    s = cmd.ExecuteReader();
-        //    lunchGridView.DataSource = s;
-        //    lunchGridView.DataBind();
-        //    s.Close();
-        //    con.Close();
-        //}
-        //protected void Grid3()
-        //{
-        //    string time = "snack";
-        //    SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-        //    con.Open();
-        //    SqlCommand cmd = new SqlCommand(DietPlanType, con);
-
-        //    cmd.Parameters.AddWithValue("@typ", time);
-        //    SqlDataReader t;
-        //    t = cmd.ExecuteReader();
-        //    snackGridView.DataSource = t;
-        //    snackGridView.DataBind();
-        //    t.Close();
-        //    con.Close();
-        //}
-        //protected void Grid4()
-        //{
-        //    string time = "dinner";
-        //    SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-        //    con.Open();
-        //    SqlCommand cmd = new SqlCommand(DietPlanType, con);
-
-        //    cmd.Parameters.AddWithValue("@typ", time);
-        //    SqlDataReader u;
-        //    u = cmd.ExecuteReader();
-        //    dinnerGridView.DataSource = u;
-        //    dinnerGridView.DataBind();
-        //    u.Close();
-        //    con.Close();
-        //}
 
     }
 

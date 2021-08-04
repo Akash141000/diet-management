@@ -15,18 +15,18 @@ namespace DietManagement.User
     {
         int ma = 0, calorie;
         GridView gridView;
-        String Struser, UserId, def;
+        string loggedUser, UserId, def;
         string[] timeArray = new string[] { "Breakfast", "Lunch", "Snack", "Dinner" };
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
-                if (Session["UserId"] != null)
+                if (Session["Username"] != null && Session["UserId"] != null)
                 {
 
-                    Struser = Session["Username"].ToString();
+                    loggedUser = Session["Username"].ToString();
                     UserId = Session["UserId"].ToString();
-                    Label5.Text = Struser;
+                    Label5.Text = loggedUser;
                 }
                 else
                 {
@@ -128,7 +128,7 @@ namespace DietManagement.User
         {
             try
             {
-                String d, e;
+                string d, e;
                 int i;
                 ;
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))

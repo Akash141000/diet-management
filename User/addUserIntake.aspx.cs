@@ -15,10 +15,10 @@ namespace DietManagement.User
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["Username"] != null)
+            if (Session["Username"] != null && Session["UserId"] != null)
             {
                 userLoggedLabel.Text = Session["Username"].ToString();
-                String StrUsername = Session["Username"].ToString();
+                string loggedUser = Session["Username"].ToString();
                 Binddata();
             }
             else
@@ -88,7 +88,7 @@ namespace DietManagement.User
             {
                 SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
                 con.Open();
-                SqlCommand cmd = new SqlCommand("Select Food,[Serving Size],Protein,Carbohydrate,Total_Fat,[Food type] from Nutrition where Food like @fd + '%'", con);
+                SqlCommand cmd = new SqlCommand("SELECT Food,[Serving Size],Protein,Carbohydrate,Total_Fat,[Food type] FROM [Nutrition] WHERE Food like @fd + '%'", con);
                 cmd.Parameters.AddWithValue("@fd", TextBox1.Text);
                 SqlDataAdapter sqa = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
@@ -117,7 +117,7 @@ namespace DietManagement.User
         {
 
 
-            String Food = gridView.SelectedRow.Cells[1].Text;
+            string Food = gridView.SelectedRow.Cells[1].Text;
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
             con.Open();
             SqlCommand cmd = new SqlCommand("SELECT Carbohydrate,Fiber,Total_Fat,[Saturate Fat (g)],[Monosat Fat (g)],[Polyunsat Fat (g)],Protein,[Sodium (mg)],[Potassium (mg)],[Cholesterol (mg)],[Vit A (RE)],[Vit C (mg)],[Calcium (mg)],[Iron (mg)]  FROM [Nutrition] WHERE Food=@Searched", con);
@@ -199,14 +199,14 @@ namespace DietManagement.User
         protected void userAddFoodBtn_Click(object sender, EventArgs e)
         {
             DateTime d2 = DateTime.Today;
-            String Str = Session["Username"].ToString();
-            String Fo = Label59.Text;
+            string Str = Session["Username"].ToString();
+            string Fo = Label59.Text;
             float pro = float.Parse(Label25.Text);
             float carbs = float.Parse(Label19.Text);
             float fat = float.Parse(Label21.Text);
             SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
             cn.Open();
-            SqlCommand cm = new SqlCommand("INSERT INTO [Intake_History] (Username,Food,Datetime,Protein,Carbohydrate,[Total Fat]) values(@Username,@Food,@Datetime,@Protein,@Carbohydrate,@Fat)", cn);
+            SqlCommand cm = new SqlCommand("INSERT INTO [UserIntakeHistory] (Username,Food,Datetime,Protein,Carbohydrate,[Total Fat]) values(@Username,@Food,@Datetime,@Protein,@Carbohydrate,@Fat)", cn);
 
             cm.Parameters.AddWithValue("@Username", Str);
             cm.Parameters.AddWithValue("@Datetime", DateTime.Today);
@@ -226,7 +226,7 @@ namespace DietManagement.User
         {
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
             con.Open();
-            SqlCommand cmd = new SqlCommand("Select Food,[Serving Size],Protein,Carbohydrate,Total_Fat,[Food type] from Nutrition ", con);
+            SqlCommand cmd = new SqlCommand("SELECT Food,[Serving Size],Protein,Carbohydrate,Total_Fat,[Food type] FROM [Nutrition] ", con);
             SqlDataAdapter sqa = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             sqa.Fill(dt);

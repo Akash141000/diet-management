@@ -31,7 +31,10 @@
                         <a class="nav-link active" aria-current="page" href="/User/CreateDietPlan.aspx">Create <br />DietPlan</a>
                     </li>
                      <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/User/addUserIntake.aspx">Add UserIntake</a>
+                        <a class="nav-link active" aria-current="page" href="/User/addUserIntake.aspx">Add <br /> UserIntake</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/User/IntakeHistory.aspx">Intake<br /> History</a>
                     </li>
                 </ul>
             </div>

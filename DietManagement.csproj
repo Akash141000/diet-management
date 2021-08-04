@@ -45,6 +45,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DataVisualization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -102,12 +103,14 @@
     <Content Include="Bootstrap-5\js\bootstrap.esm.min.js" />
     <Content Include="Bootstrap-5\js\bootstrap.js" />
     <Content Include="Bootstrap-5\js\bootstrap.min.js" />
+    <Content Include="User\AddNewFoodItem.aspx" />
     <Content Include="User\addUserIntake.aspx" />
     <Content Include="User\BmiCalculation.aspx" />
     <Content Include="User\CreateDietPlan.aspx" />
     <Content Include="User\customDietPlanDisplay.aspx" />
     <Content Include="User\DisplayDietPlan.aspx" />
     <Content Include="User\IntakeHistory.aspx" />
+    <Content Include="User\UserIntakeGraph.aspx" />
     <Content Include="Web.config" />
     <Content Include="HomePage.aspx" />
   </ItemGroup>
@@ -147,6 +150,13 @@
     </Compile>
     <Compile Include="HomePage.aspx.designer.cs">
       <DependentUpon>HomePage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User\AddNewFoodItem.aspx.cs">
+      <DependentUpon>AddNewFoodItem.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\AddNewFoodItem.aspx.designer.cs">
+      <DependentUpon>AddNewFoodItem.aspx</DependentUpon>
     </Compile>
     <Compile Include="User\addUserIntake.aspx.cs">
       <DependentUpon>addUserIntake.aspx</DependentUpon>
@@ -189,6 +199,13 @@
     </Compile>
     <Compile Include="User\IntakeHistory.aspx.designer.cs">
       <DependentUpon>IntakeHistory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User\UserIntakeGraph.aspx.cs">
+      <DependentUpon>UserIntakeGraph.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\UserIntakeGraph.aspx.designer.cs">
+      <DependentUpon>UserIntakeGraph.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

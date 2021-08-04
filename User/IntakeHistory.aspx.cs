@@ -13,14 +13,15 @@ namespace DietManagement.User
 {
     public partial class IntakeHistory : System.Web.UI.Page
     {
-        String Struser;
+        string loggedUser, UserId;
         int maintanan;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["Username"] != null)
+            if (Session["Username"] != null && Session["UserId"] != null)
             {
                 Label2.Text = Session["Username"].ToString();
-                Struser = Session["Username"].ToString();
+                loggedUser = Session["Username"].ToString();
+                UserId = Session["UserId"].ToString();
                 searchResultLbl.Visible = false;
                 invalidDateLbl.Visible = false;
                 work();
@@ -29,7 +30,7 @@ namespace DietManagement.User
             }
             else
             {
-                Response.Redirect("Login.aspx");
+                Response.Redirect("/Authentication/LoginPage.aspx");
             }
 
         }
@@ -38,21 +39,24 @@ namespace DietManagement.User
         {
             try
             {
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-                SqlCommand cmd = new SqlCommand("Select Maintanance from demo where Username=@user", con);
-                cmd.Parameters.AddWithValue("@user", Struser);
-                con.Open();
-                SqlDataReader read = cmd.ExecuteReader();
-                read.Read();
-                maintanan = Convert.ToInt32(read["Maintanance"].ToString());
-                read.Close();
-                con.Close();
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT MaintananceCalories FROM [UserBmi] WHERE UserId=@userId", con);
+                    cmd.Parameters.AddWithValue("@userId", UserId);
+
+                    SqlDataReader read = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    read.Read();
+                    maintanan = int.Parse(read["MaintananceCalories"].ToString());
+                   
+                }
+                
             }
 
             catch (Exception)
             {
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
-                Response.Redirect("BMI.aspx");
+                Response.Redirect("/User/BmiCalculation.aspx");
             }
         }
 
@@ -68,77 +72,73 @@ namespace DietManagement.User
             try
             {
 
-                SqlConnection cone = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-                SqlCommand cmde = new SqlCommand("select Datetime from Intake_History where Username=@User", cone);
-                cmde.Parameters.AddWithValue("@User", Struser);
-                cone.Open();
-                SqlDataReader reader = cmde.ExecuteReader();
-                DataTable dte = new DataTable();
-                dte.Load(reader);
-                ViewState["dte"] = dte;
-                dte = dte.DefaultView.ToTable(true, "Datetime");
-                ro = dte.Rows.Count;
-
-
-                cone.Close();
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-                for (int i = 0; i < ro; i++)
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
                 {
-                    int Totalprot = 0, Totalcarb = 0, Totalfat = 0;
-
-                    SqlCommand cmd1 = new SqlCommand("select Protein,Carbohydrate,[Total Fat] from Intake_History where Username=@User and Datetime=@date", con);
-                    cmd1.Parameters.AddWithValue("@User", Struser);
-                    String tem = dte.Rows[i][0].ToString();
-                    DateTime temp = DateTime.Parse(tem);
-
-
-                    cmd1.Parameters.AddWithValue("@date", temp);
                     con.Open();
-                    SqlDataReader read = cmd1.ExecuteReader();
-                    while (read.Read())
-                    {
+                    SqlCommand cmd = new SqlCommand("SELECT Datetime FROM [UserIntakeHistory] WHERE Username=@User", con);
+                    cmd.Parameters.AddWithValue("@User", loggedUser);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    DataTable dte = new DataTable();
+                    dte.Load(reader);
+                    ViewState["dte"] = dte;
+                    dte = dte.DefaultView.ToTable(true, "Datetime");
+                    ro = dte.Rows.Count;
 
-                        temp1 = float.Parse(read["Protein"].ToString());
-                        Totalprot = Totalprot + (int)temp1;
-                        temp2 = float.Parse(read["Carbohydrate"].ToString());
-                        Totalcarb = Totalcarb + (int)temp2;
-                        temp3 = float.Parse(read["Total Fat"].ToString());
-                        Totalfat = Totalfat + (int)temp3;
+
+                    for (int i = 0; i < ro; i++)
+                    {
+                        int Totalprot = 0, Totalcarb = 0, Totalfat = 0;
+
+                        SqlCommand cmd1 = new SqlCommand("SELECT Protein,Carbohydrate,[Total Fat] FROM [UserIntakeHistory] WHERE Username=@User AND Datetime=@date", con);
+                        cmd1.Parameters.AddWithValue("@User", loggedUser);
+                        string tem = dte.Rows[i][0].ToString();
+                        DateTime temp = DateTime.Parse(tem);
+
+
+                        cmd1.Parameters.AddWithValue("@date", temp);
+                        
+                        SqlDataReader read = cmd1.ExecuteReader();
+                        while (read.Read())
+                        {
+
+                            temp1 = float.Parse(read["Protein"].ToString());
+                            Totalprot = Totalprot + (int)temp1;
+                            temp2 = float.Parse(read["Carbohydrate"].ToString());
+                            Totalcarb = Totalcarb + (int)temp2;
+                            temp3 = float.Parse(read["Total Fat"].ToString());
+                            Totalfat = Totalfat + (int)temp3;
+
+                        }
+                        ma = (Totalprot * 4) + (Totalcarb * 4) + (Totalfat * 9);
+
+                        SqlCommand cd = new SqlCommand("SELECT * FROM [UserIntake] WHERE Username=@Username AND Datetime=@Date", con);
+                      
+                        cd.Parameters.AddWithValue("@Username", loggedUser);
+                        cd.Parameters.AddWithValue("@Date", temp);
+                        SqlDataAdapter da = new SqlDataAdapter(cd);
+                        DataTable dti = new DataTable();
+                        da.Fill(dti);
+                        if (dti.Rows.Count > 0)
+                        {
+                            SqlCommand cmdQ = new SqlCommand("UPDATE [UserIntake] SET Caloricint=@cal WHERE Username=@usrname AND Datetime=@Date", con);
+                            cmdQ.Parameters.AddWithValue("@cal", ma);
+                            cmdQ.Parameters.AddWithValue("@usrname", loggedUser);
+                            cmdQ.Parameters.AddWithValue("@Date", temp);
+                            cmdQ.ExecuteNonQuery();
+                        }
+
+                        else
+                        {
+                            SqlCommand cmdQ = new SqlCommand("INSERT INTO [UserIntake] (Maintanance,Caloricint,Datetime,Username) values(@main,@cal,@date,@User)", con);
+                            cmdQ.Parameters.AddWithValue("@main", maintanan);
+                            cmdQ.Parameters.AddWithValue("@cal", ma);
+                            cmdQ.Parameters.AddWithValue("@date", temp);
+                            cmdQ.Parameters.AddWithValue("@User", loggedUser);
+                            cmdQ.ExecuteNonQuery();
+
+                        }
 
                     }
-                    con.Close();
-                    ma = (Totalprot * 4) + (Totalcarb * 4) + (Totalfat * 9);
-
-                    SqlCommand cd = new SqlCommand("select * from Intake where Username=@Username and Datetime=@Date", con);
-                    con.Open();
-                    cd.Parameters.AddWithValue("@Username", Struser);
-                    cd.Parameters.AddWithValue("@Date", temp);
-                    SqlDataAdapter da = new SqlDataAdapter(cd);
-                    DataTable dti = new DataTable();
-                    da.Fill(dti);
-                    if (dti.Rows.Count > 0)
-                    {
-                        SqlCommand cd1 = new SqlCommand("UPDATE Intake SET Caloricint=@cal WHERE Username=@usrname and Datetime=@Date", con);
-                        cd1.Parameters.AddWithValue("@cal", ma);
-                        cd1.Parameters.AddWithValue("@usrname", Struser);
-                        cd1.Parameters.AddWithValue("@Date", temp);
-                        cd1.ExecuteNonQuery();
-                        con.Close();
-
-                    }
-
-                    else
-                    {
-                        SqlCommand cd1 = new SqlCommand("insert into Intake" + "(Maintanance,Caloricint,Datetime,Username) values(@main,@cal,@date,@User)", con);
-                        cd1.Parameters.AddWithValue("@main", maintanan);
-                        cd1.Parameters.AddWithValue("@cal", ma);
-                        cd1.Parameters.AddWithValue("@date", temp);
-                        cd1.Parameters.AddWithValue("@User", Struser);
-                        cd1.ExecuteNonQuery();
-                        con.Close();
-
-                    }
-
                 }
             }
             catch (Exception)
@@ -151,7 +151,7 @@ namespace DietManagement.User
         {
 
             DateTime Dt, dd, dt1;
-            String txt;
+            string txt;
             try
             {
                 txt = dataInput.Text;
@@ -171,35 +171,35 @@ namespace DietManagement.User
                 }
                 else
                 {
-                    SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-                    con.Open();
-                    SqlCommand cm = new SqlCommand("Select Datetime from Intake_History where Username=@user", con);
-                    cm.Parameters.AddWithValue("@user", Struser);
-                    SqlDataAdapter da = new SqlDataAdapter(cm);
-                    DataTable de = new DataTable();
-                    da.Fill(de);
-                    con.Close();
-                    if (de.Rows.Count > 0)
+                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
                     {
-                        SqlCommand cmd = new SqlCommand("select Food,Protein,Carbohydrate,[Total Fat] from Intake_History where Datetime=@Date and Username=@user", con);
-                        cmd.Parameters.AddWithValue("@Date", DateTime.Parse(dataInput.Text));
-                        cmd.Parameters.AddWithValue("@user", Struser);
-                        con.Open();
-                        SqlDataReader r;
-                        r = cmd.ExecuteReader();
-                        displayIntakeGridView.DataSource = r;
-                        displayIntakeGridView.DataBind();
-                        r.Close();
-                        con.Close();
-                        bt();
-                        statisticsBtn.Visible = true;
-                    }
-                    else
-                    {
-                        statisticsBtn.Visible = false;
-                        searchResultLbl.Visible = true;
-                        searchResultLbl.Text = "No data Entered in last 7 days";
 
+                        con.Open();
+                        SqlCommand cm = new SqlCommand("SELECT Datetime FROM [UserIntakeHistory] WHERE Username=@user", con);
+                        cm.Parameters.AddWithValue("@user", loggedUser);
+                        SqlDataAdapter da = new SqlDataAdapter(cm);
+                        DataTable de = new DataTable();
+                        da.Fill(de);
+                        if (de.Rows.Count > 0)
+                        {
+                            SqlCommand cmd = new SqlCommand("SELECT Food,Protein,Carbohydrate,[Total Fat] FROM [UserIntakeHistory] WHERE Datetime=@Date and Username=@user", con);
+                            cmd.Parameters.AddWithValue("@Date", DateTime.Parse(dataInput.Text));
+                            cmd.Parameters.AddWithValue("@user", loggedUser);
+                            
+                            SqlDataReader reader =  cmd.ExecuteReader();
+                            displayIntakeGridView.DataSource = reader;
+                            displayIntakeGridView.DataBind();
+                            reader.Close();
+                            bt();
+                            statisticsBtn.Visible = true;
+                        }
+                        else
+                        {
+                            statisticsBtn.Visible = false;
+                            searchResultLbl.Visible = true;
+                            searchResultLbl.Text = "No data Entered in last 7 days";
+
+                        }
                     }
                 }
             }
@@ -213,9 +213,7 @@ namespace DietManagement.User
         protected void statisticsBtn_Click(object sender, EventArgs e)
         {
 
-            Response.Redirect("Graph.aspx");
-
-
+            Response.Redirect("/User/UserIntakeGraph.aspx");
 
         }
     }

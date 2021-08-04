@@ -15,190 +15,214 @@ namespace DietManagement.User
     public partial class customDietPlanDisplay : System.Web.UI.Page
     {
 
-        String strUser, prote, carbses, fates, caloric, protein1, carbs1, fats1, mai1, ap, bc, cf, dm;
-        int Totalprot = 0, Totalcarb = 0, Totalfat = 0, Totalcal = 0, p, c, f, m, bt = 0, chk = 0;
-        float temp1, temp2, temp3, temp4;
+        string loggedUser,UserId,amountOfProtein,amountOfCarbs,amountOfFats,amountOfCalories;
+        int proteinRequired, carbsRequired, fatsRequired, maintananceCalories, totalProtein = 0, totalCarbs = 0, totalfats = 0, Totalcal = 0, removeBtnPressed = 0, checkBtnPressed = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["Username"] != null)
+            if (Session["Username"] != null && Session["UserId"] != null)
             {
                 userLoggedLbl.Text = Session["Username"].ToString();
-                strUser = Session["Username"].ToString();
+                UserId = Session["UserId"].ToString();
+                loggedUser = Session["Username"].ToString();
             }
             else
             {
-                Response.Redirect("Login.aspx");
+                Response.Redirect("/Authentication/LoginPage.aspx");
             }
 
             try
             {
+                calculateDiet();
 
-
-                fuchk();
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-                con.Open();
-                SqlCommand cmd = new SqlCommand("Select Maintanance,Protein,Carbs,Fat  from demo Where Username=@Username", con);
-                cmd.Parameters.AddWithValue("@Username", strUser);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
                 {
-                    mai1 = reader["Maintanance"].ToString();
-                    protein1 = reader["Protein"].ToString();
-                    carbs1 = reader["Carbs"].ToString();
-                    fats1 = reader["Fat"].ToString();
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT MaintananceCalories,ProteinRequired,CarbsRequired,FatsRequired  FROM [UserBmi] WHERE UserID=@userId", con);
+                    cmd.Parameters.AddWithValue("@userId", UserId);
+                    SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    maintananceCalories = int.Parse(reader["Maintanance"].ToString());
+                    proteinRequired = int.Parse(reader["Protein"].ToString());
+                    carbsRequired = int.Parse(reader["Carbs"].ToString());
+                    fatsRequired = int.Parse(reader["Fat"].ToString());
+
                 }
-                reader.Close();
-
-                m = Int16.Parse(mai1);
-                p = Int16.Parse(protein1);
-                c = Int16.Parse(carbs1);
-                f = Int16.Parse(fats1);
-
-                Grid1();
-                Grid1();
-                Grid2();
-                Grid3();
-                Grid4();
+                GridDisplay();
+                //Grid1();
+                //Grid1();
+                //Grid2();
+                //Grid3();
+                //Grid4();
             }
             catch (Exception)
             {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('1Something went wrong please try again')", true);
             }
 
         }
-        public void pi()
+        public void proteinAmount()
         {
-            if (p / 2 > Totalprot)
+            if (proteinRequired / 2 > totalProtein)
             {
-                ap = "low";
+                amountOfProtein = "low";
             }
-            else if (p + p / 2 < Totalprot)
+            else if (proteinRequired + proteinRequired / 2 < totalProtein)
             {
-                ap = "high";
+                amountOfProtein = "high";
             }
-            else if (p / 2 < Totalprot && Totalprot < p + p / 2)
+            else if (proteinRequired / 2 < totalProtein && totalProtein < proteinRequired + proteinRequired / 2)
             {
-                ap = "perfect";
+                amountOfProtein = "perfect";
             }
 
         }
-        public void ci()
+        public void carbsAmount()
         {
-            if (c / 2 > Totalcarb)
+            if (carbsRequired / 2 > totalCarbs)
             {
-                bc = "low";
+                amountOfCarbs = "low";
             }
-            else if (c + c / 2 < Totalcarb)
+            else if (carbsRequired + carbsRequired / 2 < totalCarbs)
             {
-                bc = "high";
+                amountOfCarbs = "high";
             }
-            else if (c / 2 < Totalcarb && Totalcarb < c + c / 2)
+            else if (carbsRequired / 2 < totalCarbs && totalCarbs < carbsRequired + carbsRequired / 2)
             {
-                bc = "perfect";
+                amountOfCarbs = "perfect";
             }
         }
-        public void fi()
+        public void fatsAmount()
         {
-            if (f / 2 > Totalfat)
+            if (fatsRequired / 2 > totalfats)
             {
-                cf = "low";
+                amountOfFats = "low";
             }
-            else if (f + f / 2 < Totalfat)
+            else if (fatsRequired + fatsRequired / 2 < totalfats)
             {
-                cf = "high";
+                amountOfFats = "high";
             }
-            else if (f / 2 < Totalfat && Totalfat < f + f / 2)
+            else if (fatsRequired / 2 < totalfats && totalfats < fatsRequired + fatsRequired / 2)
             {
-                cf = "perfect";
+                amountOfFats = "perfect";
             }
         }
-        public void mai()
+        public void maintananceCaloriesAmount()
         {
-            if (m - 50 < Totalcal && Totalcal < m + 50)
+            if (maintananceCalories - 50 < Totalcal && Totalcal < maintananceCalories + 50)
             {
-                dm = "Perfect";
+                amountOfCalories = "Perfect";
             }
-            else if (m - 50 > Totalcal)
+            else if (maintananceCalories - 50 > Totalcal)
             {
-                dm = "Low";
+                amountOfCalories = "Low";
             }
-            else if (m + 50 < Totalcal)
+            else if (maintananceCalories + 50 < Totalcal)
             {
-                dm = "High";
+                amountOfCalories = "High";
             }
         }
 
-        protected void fuchk()
+        protected void calculateDiet()
         {
-            try
-            {
+            //try
+            //{
 
-                chk = chk + 1;
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString); ;
-                SqlCommand cmd1 = new SqlCommand("select Protein,Carbohydrate,Total_Fat,Calories from Dietplan where Username=@User", con);
-                cmd1.Parameters.AddWithValue("@User", strUser);
-                con.Open();
-                SqlDataReader r = cmd1.ExecuteReader();
-                while (r.Read())
+                checkBtnPressed = checkBtnPressed + 1;
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
                 {
-                    prote = r["Protein"].ToString();
-                    temp1 = float.Parse(prote);
-                    Totalprot = Totalprot + (int)temp1;
-                    carbses = r["Carbohydrate"].ToString();
-                    temp2 = float.Parse(carbses);
-                    Totalcarb = Totalcarb + (int)temp2;
-                    fates = r["Total_Fat"].ToString();
-                    temp3 = float.Parse(fates);
-                    Totalfat = Totalfat + (int)temp3;
-                    caloric = r["Calories"].ToString();
-                    temp4 = float.Parse(caloric);
-                    Totalcal = Totalcal + (int)temp4;
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT Protein,Carbohydrate,Total_Fat,Calories FROM [Dietplan] WHERE Username=@User", con);
+                    cmd.Parameters.AddWithValue("@User", loggedUser);
+                    SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                    while (reader.Read())
+                    {
+                        string readProtein = reader["Protein"].ToString();
+                        totalProtein = totalProtein + Int32.Parse(readProtein);
+                        string readCarbs = reader["Protein"].ToString();
+                        totalCarbs = totalCarbs + Int32.Parse(readCarbs);
+                        string readFats = reader["Protein"].ToString();
+                        totalfats = totalfats + Int32.Parse(readFats);
+                        string readCalories = reader["Calories"].ToString();
+                        Totalcal = Totalcal + Int32.Parse(readCalories);
+                    }
+
+                    //string readProtein = reader["Protein"].ToString();
+                    //float proteinConverted = float.Parse(readProtein);
+                    //totalProtein = totalProtein + Int32.Parse(proteinConverted.ToString());
+                    //string readCarbs = reader["Protein"].ToString();
+                    //float carbsConverted = float.Parse(readCarbs);
+                    //totalCarbs = totalCarbs + int.Parse(carbsConverted);
+                    //string readFats = reader["Protein"].ToString();
+                    //float fatsConverted = float.Parse(readFats);
+                    //totalfats = totalfats + int.Parse(readFats);
+                    //string readCalories = reader["Calories"].ToString();
+                    //Totalcal = Totalcal + Int32.Parse(readCalories);
+
+                    //while (reader.Read())
+                    //{
+                    //    string readProtein = reader["Protein"].ToString();
+                    //    totalProtein = totalProtein + int.Parse(reader["Protein"].ToString());
+                    //    string readCarbs = reader["Protein"].ToString();
+                    //    totalCarbs = totalCarbs + int.Parse(reader["Carbohydrate"].ToString());
+                    //    string readFats = reader["Protein"].ToString();
+                    //    totalfats = totalfats + int.Parse(reader["Total_Fat"].ToString());
+                    //    string readCalories = reader["Protein"].ToString();
+                    //    Totalcal = Totalcal + int.Parse(reader["Calories"].ToString());
+                    //}
+
+                    //protein = float.Parse(reader["Protein"].ToString());
+                    //totalProtein = totalProtein + (int)protein;
+                    //carbs = float.Parse(reader["Carbohydrate"].ToString());
+                    //totalCarbs = totalCarbs + (int)carbs;
+                    //fats = float.Parse(reader["Total_Fat"].ToString());
+                    //totalfats = totalfats + (int)fats;
+                    //calories = float.Parse(reader["Calories"].ToString());
+                    //Totalcal = Totalcal + (int)calories;
                 }
 
                 if (Totalcal == 0)
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Please select food to create a Dietplan')", true);
-                    Response.Redirect("CreatePlan.aspx");
+                    Response.Redirect("/User/CreateDietPlan.aspx");
+                    return;
                 }
-                else
-                {
-                    proteinAmountLbl.Text = Totalprot.ToString();
-                    carbohydrateAmountLbl.Text = Totalcarb.ToString();
-                    fatsAmountLbl.Text = Totalfat.ToString();
-                    totalCaloriesLbl.Text = Totalcal.ToString();
-                    pi();
-                    ci();
-                    fi();
-                    mai();
-                    displayMaintananceCaloriesLbl.Text = "Maintanance calories" + " " + "is" + " " + dm + "<br>" + "protein" + " " + "is" + " " + ap + "<br>" + "Carbohydrate" + " " + "is" + " " + bc + "<br>" + "Total Fat" + " " + "is" + " " + cf;
-                    Totalprot = 0;
-                    Totalcarb = 0;
-                    Totalfat = 0;
-                    Totalcal = 0;
-                }
-            }
-            catch
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
-            }
+                proteinAmountLbl.Text = totalProtein.ToString();
+                carbohydrateAmountLbl.Text = totalCarbs.ToString();
+                fatsAmountLbl.Text = totalfats.ToString();
+                totalCaloriesLbl.Text = Totalcal.ToString();
+                proteinAmount();
+                carbsAmount();
+                fatsAmount();
+                maintananceCaloriesAmount();
+                displayMaintananceCaloriesLbl.Text = "Maintanance calories" + " " + "is" + " " + amountOfCalories + "<br>" + "protein" + " " + "is" + " " + amountOfProtein + "<br>" + "Carbohydrate" + " " + "is" + " " + amountOfCarbs + "<br>" + "Total Fat" + " " + "is" + " " + amountOfFats;
+                totalProtein = 0;
+                totalCarbs = 0;
+                totalfats = 0;
+                Totalcal = 0;
+
+            //}
+            //catch
+            //{
+            //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('2Something went wrong please try again')", true);
+            //}
         }
 
         protected void checkBtn_Click(object sender, EventArgs e)
         {
-            fuchk();
+            calculateDiet();
 
 
         }
         protected void addMoreFoodBtn_Click(object sender, EventArgs e)
         {
-            Response.Redirect("CreateDPlan.aspx");
+            Response.Redirect("/User/CreateDietPlan.aspx");
         }
         protected void removeFoodBtn_Click(object sender, EventArgs e)
         {
             try
             {
-                bt = bt + 1;
-                if (bt > 1)
+                removeBtnPressed = removeBtnPressed + 1;
+                if (removeBtnPressed > 1)
                 {
                     removeFoodBtn.Visible = false;
                 }
@@ -206,7 +230,7 @@ namespace DietManagement.User
                 {
                     removeFoodBtn.Visible = true;
                 }
-                if (chk > 1)
+                if (checkBtnPressed > 1)
                 {
                     removeFoodBtn.Visible = false;
                 }
@@ -219,14 +243,14 @@ namespace DietManagement.User
                 CommandField cField = new CommandField();
                 cField.ShowDeleteButton = true;
                 cField.DeleteText = "Delete";
-                breakfastGridView.Columns.Add(cField);
-                lunchGridView.Columns.Add(cField);
-                snackGridView.Columns.Add(cField);
-                dinnerGridView.Columns.Add(cField);
-                Grid1();
-                Grid2();
-                Grid3();
-                Grid4();
+
+                List<GridView> gridViews = new List<GridView>() { breakfastGridView, lunchGridView, snackGridView, dinnerGridView };
+                foreach (GridView grid in gridViews)
+                {
+                    grid.Columns.Add(cField);
+                }
+                GridDisplay();
+
                 if (cField.ShowDeleteButton == true)
                 {
                     removeFoodBtn.Visible = false;
@@ -234,12 +258,11 @@ namespace DietManagement.User
                 else
                 {
                     removeFoodBtn.Visible = true;
-
                 }
             }
             catch
             {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('3Something went wrong please try again')", true);
             }
         }
         protected void breakfastGridView_OnRowDeleting(object sender, GridViewDeleteEventArgs e)
@@ -247,145 +270,135 @@ namespace DietManagement.User
             try
             {
 
-                int temp = 0;
+                int rowId = 0;
 
-                temp = Convert.ToInt32(this.breakfastGridView.DataKeys[e.RowIndex].Value);
+                rowId = Convert.ToInt32(this.breakfastGridView.DataKeys[e.RowIndex].Value);
 
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-                Response.Write(temp);
-                con.Open();
-                SqlCommand cm = new SqlCommand("Delete From Dietplan where id=@id and Username=@User", con);
-                cm.Parameters.AddWithValue("@id", temp);
-                cm.Parameters.AddWithValue("@User", strUser);
-                cm.ExecuteNonQuery();
-                con.Close();
-                Grid1();
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM [Dietplan] WHERE id=@id AND Username=@User", con);
+                    cmd.Parameters.AddWithValue("@id", rowId);
+                    cmd.Parameters.AddWithValue("@User", loggedUser);
+                    cmd.ExecuteNonQuery();
+                    GridDisplay("breakfast");
+                }
+                
             }
             catch (Exception)
             {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('4Something went wrong please try again')", true);
             }
         }
         protected void lunchGridView_OnRowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            int temp = 0;
+            int rowId = 0;
 
-            temp = Convert.ToInt32(lunchGridView.DataKeys[e.RowIndex].Value);
+            rowId = Convert.ToInt32(lunchGridView.DataKeys[e.RowIndex].Value);
 
-            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-            Response.Write(temp);
-            con.Open();
-            SqlCommand cm = new SqlCommand("Delete From Dietplan where id=@id and Username=@User", con);
-            cm.Parameters.AddWithValue("@id", temp);
-            cm.Parameters.AddWithValue("@User", strUser);
-            cm.ExecuteNonQuery();
-            con.Close();
-            Grid2();
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("DELETE FROM [Dietplan] WHERE id=@id AND Username=@User", con);
+                cmd.Parameters.AddWithValue("@id", rowId);
+                cmd.Parameters.AddWithValue("@User", loggedUser);
+                cmd.ExecuteNonQuery();
+                GridDisplay("lunch");
+            }
+           
+
         }
         protected void snackGridView_OnRowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            int temp = 0;
+            int rowId = 0;
 
-            temp = Convert.ToInt32(this.snackGridView.DataKeys[e.RowIndex].Value);
+            rowId = Convert.ToInt32(this.snackGridView.DataKeys[e.RowIndex].Value);
 
-            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-            Response.Write(temp);
-            con.Open();
-            SqlCommand cm = new SqlCommand("Delete From Dietplan where id=@id and Username=@User", con);
-            cm.Parameters.AddWithValue("@id", temp);
-            cm.Parameters.AddWithValue("@User", strUser);
-            cm.ExecuteNonQuery();
-            con.Close();
-            Grid3();
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("DELETE FROM [Dietplan] WHERE id=@id AND Username=@User", con);
+                cmd.Parameters.AddWithValue("@id", rowId);
+                cmd.Parameters.AddWithValue("@User", loggedUser);
+                cmd.ExecuteNonQuery();
+                GridDisplay("snack");
+            }
         }
         protected void dinnerGridView_OnRowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            int temp = 0;
+            int rowId = 0;
 
-            temp = Convert.ToInt32(this.dinnerGridView.DataKeys[e.RowIndex].Value);
+            rowId = Convert.ToInt32(this.dinnerGridView.DataKeys[e.RowIndex].Value);
 
-            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-            Response.Write(temp);
-            con.Open();
-            SqlCommand cm = new SqlCommand("Delete From Dietplan where id=@id and Username=@User", con);
-            cm.Parameters.AddWithValue("@id", temp);
-            cm.Parameters.AddWithValue("@User", strUser);
-            cm.ExecuteNonQuery();
-            con.Close();
-            Grid4();
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
+            {
+                con.Open();
+                SqlCommand cm = new SqlCommand("DELETE FROM [Dietplan] WHERE id=@id AND Username=@User", con);
+                cm.Parameters.AddWithValue("@id", rowId);
+                cm.Parameters.AddWithValue("@User", loggedUser);
+                cm.ExecuteNonQuery();
+                GridDisplay("dinner");
+            }
         }
-        protected void OnRowDataBound(object sender, GridViewCommandEventArgs e)
+
+        protected void GridDisplay(string gridTimeArgs = null)
         {
+            string[] timeArray = new string[] { "breakfast", "lunch", "snack", "dinner" };
+            GridView gridView;
 
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
+            {
+
+                if (gridTimeArgs != null)
+                {
+                    setTime(gridTimeArgs);
+                    displayGrid(gridTimeArgs);
+                    return;
+                }
+                else
+                {
+                    foreach (string timeElement in timeArray)
+                    {
+                        setTime(timeElement);
+                        displayGrid(timeElement);
+                    }
+                }
+
+
+                void setTime(string timeArgs)
+                {
+                    if (timeArgs == "breakfast")
+                    {
+                        gridView = breakfastGridView;
+                    }
+                    else if (timeArgs == "lunch")
+                    {
+                        gridView = lunchGridView;
+                    }
+                    else if (timeArgs == "snack")
+                    {
+                        gridView = snackGridView;
+                    }
+                    else
+                    {
+                        gridView = dinnerGridView;
+                    }
+                }
+
+                void displayGrid(string timeArgs)
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT id,Food,Protein,Carbohydrate,Total_Fat,Calories FROM [Dietplan] WHERE Time=@type AND Username=@Username", con);
+
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@type", timeArgs);
+                    cmd.Parameters.AddWithValue("@Username", loggedUser);
+                    SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    gridView.DataSource = reader;
+                    gridView.DataBind();
+                }
+            }
         }
-        protected void Grid1()
-        {
-            String temp1 = "breakfast";
-            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-            con.Open();
-            SqlCommand cmd = new SqlCommand("select id,Food,Protein,Carbohydrate,Total_Fat,Calories from Dietplan where Time=@typ and Username=@Username", con);
-            cmd.Parameters.AddWithValue("@typ", temp1);
-            cmd.Parameters.AddWithValue("@Username", strUser);
-            SqlDataReader r;
-            r = cmd.ExecuteReader();
-            breakfastGridView.DataSource = r;
-            breakfastGridView.DataBind();
-            breakfastGridView.Columns[0].Visible = false;
-            r.Close();
-            con.Close();
-
-
-
-        }
-        protected void Grid2()
-        {
-            String temp2 = "lunch";
-            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-            con.Open();
-            SqlCommand cmd1 = new SqlCommand("select id,Food,Protein,Carbohydrate,Total_Fat,Calories from Dietplan where Time=@typ and Username=@Username", con);
-            cmd1.Parameters.AddWithValue("@typ", temp2);
-            cmd1.Parameters.AddWithValue("@Username", strUser);
-            SqlDataReader s;
-            s = cmd1.ExecuteReader();
-            lunchGridView.DataSource = s;
-            lunchGridView.DataBind();
-            lunchGridView.Columns[0].Visible = false;
-            s.Close();
-            con.Close();
-        }
-        protected void Grid3()
-        {
-            String temp3 = "snack";
-            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-            con.Open();
-            SqlCommand cmd2 = new SqlCommand("select id,Food,Protein,Carbohydrate,Total_Fat,Calories from Dietplan where Time=@typ and Username=@Username", con);
-            cmd2.Parameters.AddWithValue("@typ", temp3);
-            cmd2.Parameters.AddWithValue("@Username", strUser);
-            SqlDataReader t;
-            t = cmd2.ExecuteReader();
-            snackGridView.DataSource = t;
-            snackGridView.DataBind();
-            snackGridView.Columns[0].Visible = false;
-            t.Close();
-            con.Close();
-        }
-        protected void Grid4()
-        {
-            String temp4 = "dinner";
-            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-            con.Open();
-            SqlCommand cmd3 = new SqlCommand("select id,Food,Protein,Carbohydrate,Total_Fat,Calories from Dietplan where Time=@typ and Username=@Username", con);
-            cmd3.Parameters.AddWithValue("@typ", temp4);
-            cmd3.Parameters.AddWithValue("@Username", strUser);
-            SqlDataReader u;
-            u = cmd3.ExecuteReader();
-            dinnerGridView.DataSource = u;
-            dinnerGridView.DataBind();
-            dinnerGridView.Columns[0].Visible = false;
-            u.Close();
-            con.Close();
-        }
-
-
+       
     }
 }

@@ -23,6 +23,7 @@
 
     
     <div class="container-fluid img-fluid min-vh-100" style="background-image: url('back/gw.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
+        <form runat="server">
         <div class="row  justify-content-around">
             <div class="col-lg-12  justify-content-end text-dark text-lg-right " style="font-size:20px">
                 <span class="fas fa-user">
@@ -57,7 +58,6 @@
                                 class="btn-outline-dark form-control" />
 
 
-
                         </div>
 
                     </div>
@@ -86,7 +86,7 @@
 
 
 
-
+            </form>
         </div>
 
     <%-- script --%>

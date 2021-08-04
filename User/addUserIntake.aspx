@@ -30,7 +30,7 @@
                         </asp:TextBox>
                         <div class="input-group-btn col-lg-3">
                             <asp:Button ID="SearchFoodBtn" runat="server" data-placement="right" title="Click to Search" data-toggle="tooltip" class="btn-light form-control" Text="Search" OnClick="SearchFoodBtn_Click" />
-                            <asp:Button ID="addNewFoodItemBtn" runat="server" data-placement="right" title="Click to add food to database" data-toggle="tooltip" class="btn-light form-control" Text="Add" PostBackUrl="~/Intakeadd.aspx" />
+                            <asp:Button ID="addNewFoodItemBtn" runat="server" data-placement="right" title="Click to add food to database" data-toggle="tooltip" class="btn-light form-control" Text="Add" PostBackUrl="/User/AddNewFoodItem.aspx" />
                         </div>
                     </div>
                 </div>
