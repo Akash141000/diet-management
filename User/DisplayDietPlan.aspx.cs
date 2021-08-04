@@ -40,11 +40,6 @@ namespace DietManagement.User
                 {
                     con.Open();
                     SqlCommand cmd = new SqlCommand(def, con);
-                    if(def == null)
-                    {
-                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('def is null')", true);
-                        return;
-                    }
                     
                     foreach(string time in timeArray)
                     {
@@ -74,38 +69,6 @@ namespace DietManagement.User
                         reader.Close();
                     }
                 }
-
-                //SqlCommand cmd = new SqlCommand(def, con);
-                ////SqlCommand cd = new SqlCommand(def, con);
-                ////SqlCommand cm = new SqlCommand(def, con);
-                ////SqlCommand cmd1 = new SqlCommand(def, con);
-                //cmd.Parameters.AddWithValue("@cal", calorie);
-                //cmd.Parameters.AddWithValue("@time", "Breakfast");
-                ////cd.Parameters.AddWithValue("@cal", calorie);
-                ////cd.Parameters.AddWithValue("@time", "Lunch");
-                ////cm.Parameters.AddWithValue("@cal", calorie);
-                ////cm.Parameters.AddWithValue("@time", "Snack");
-                ////cmd1.Parameters.AddWithValue("@cal", calorie);
-                ////cmd1.Parameters.AddWithValue("@time", "Dinner");
-                //con.Open();
-                //SqlDataReader r = cmd.ExecuteReader();
-                //SqlDataReader s = cd.ExecuteReader();
-                //SqlDataReader t = cm.ExecuteReader();
-                //SqlDataReader u = cmd1.ExecuteReader();
-                //breakFastGridView.DataSource = r;
-                //breakFastGridView.DataBind();
-                //r.Close();
-                //lunchGridView.DataSource = s;
-                //lunchGridView.DataBind();
-                //s.Close();
-                //snackGridView.DataSource = t;
-                //snackGridView.DataBind();
-                //t.Close();
-                //dinnerGridView.DataSource = u;
-                //dinnerGridView.DataBind();
-                //u.Close();
-
-
             }
             catch (NullReferenceException)
             {
@@ -200,11 +163,10 @@ namespace DietManagement.User
                             def = "SELECT Food,Quantity FROM [SavedDiet] WHERE calories=@cal AND Time=@time";
                         }
                     }
-
                     else
                     {
                         ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Please calculate your BMI first')", true);
-                        //Response.Redirect("/User/BmiCalculation.aspx");
+                        Response.Redirect("/User/BmiCalculation.aspx");
                     }
                 }
             }

@@ -23,7 +23,7 @@ namespace DietManagement.User
             }
             else
             {
-                Response.Redirect("Login.aspx");
+                Response.Redirect("/Authentication/LoginPage.aspx");
             }
             addNewFoodItemBtn.Visible = false;
             carbohydrateLbl.Visible = false;
@@ -120,7 +120,7 @@ namespace DietManagement.User
             String Food = gridView.SelectedRow.Cells[1].Text;
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
             con.Open();
-            SqlCommand cmd = new SqlCommand("Select Carbohydrate,Fiber,Total_Fat,[Saturate Fat (g)],[Monosat Fat (g)],[Polyunsat Fat (g)],Protein,[Sodium (mg)],[Potassium (mg)],[Cholesterol (mg)],[Vit A (RE)],[Vit C (mg)],[Calcium (mg)],[Iron (mg)]  from Nutrition Where Food=@Searched", con);
+            SqlCommand cmd = new SqlCommand("SELECT Carbohydrate,Fiber,Total_Fat,[Saturate Fat (g)],[Monosat Fat (g)],[Polyunsat Fat (g)],Protein,[Sodium (mg)],[Potassium (mg)],[Cholesterol (mg)],[Vit A (RE)],[Vit C (mg)],[Calcium (mg)],[Iron (mg)]  FROM [Nutrition] WHERE Food=@Searched", con);
 
             cmd.Parameters.AddWithValue("@Searched", Food);
             SqlDataReader reader = cmd.ExecuteReader();
@@ -206,7 +206,7 @@ namespace DietManagement.User
             float fat = float.Parse(Label21.Text);
             SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
             cn.Open();
-            SqlCommand cm = new SqlCommand("insert into Intake_History" + "(Username,Food,Datetime,Protein,Carbohydrate,[Total Fat]) values(@Username,@Food,@Datetime,@Protein,@Carbohydrate,@Fat)", cn);
+            SqlCommand cm = new SqlCommand("INSERT INTO [Intake_History] (Username,Food,Datetime,Protein,Carbohydrate,[Total Fat]) values(@Username,@Food,@Datetime,@Protein,@Carbohydrate,@Fat)", cn);
 
             cm.Parameters.AddWithValue("@Username", Str);
             cm.Parameters.AddWithValue("@Datetime", DateTime.Today);

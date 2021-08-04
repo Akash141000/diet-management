@@ -1,28 +1,20 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true"  MasterPageFile="~/Navigation/userNavigation.master" CodeBehind="CreateDietPlan.aspx.cs" Inherits="DietManagement.User.CreateDietPlan" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Navigation/userNavigation.master" CodeBehind="CreateDietPlan.aspx.cs" Inherits="DietManagement.User.CreateDietPlan" %>
 
 <asp:Content ContentPlaceHolderID="head" runat="server">
     <title>Create DietPlan</title>
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link href="./Bootstrap-5/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Bootstrap-5/css/bootstrap.min.css" rel="stylesheet" />
     <script
         async="async"
         defer="defer"
-        src="./Bootstrap-5/css/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript">
+        src="../Bootstrap-5/css/js/bootstrap.bundle.min.js"></script>
+    <%--<script type="text/javascript">
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
         });
-        //validation logic
-        const heightInputType = document.getElementById("heightInputTypeSelected");
-        console.log('slected', heightInputType);
-        if (heightInputType.selectedIndex !== 0) {
-            console.log('working...')
-            document.getElementById("heightInputFieldInInches").style.display = none;
-        }
-
-    </script>
+    </script>--%>
 </asp:Content>
 
 <asp:Content ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
@@ -37,8 +29,9 @@
 
 
         <div class="container-fluid img-fluid min-vh-100 " style="background-image: url('back/diet.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
+        <form runat="server">
             <div class="row  justify-content-around">
-                <div class="col-lg-12  justify-content-end text-dark text-lg-right"  style="font-size:20px">
+                <div class="col-lg-12  justify-content-end text-dark text-lg-right" style="font-size: 20px">
                     <span class="fas fa-user">
                         <asp:Label ID="Label7" runat="server"></asp:Label>
                     </span>
@@ -46,7 +39,7 @@
             </div>
 
 
-            <div class="row col-lg-12 justify-content-around" style="font-size:20px">
+            <div class="row col-lg-12 justify-content-around" style="font-size: 20px">
                 <div class="col-lg-8 offset-lg-4 text-dark">
                     <asp:Label ID="BmiLabel" runat="server" Text="BMI" class=" col-lg-1"></asp:Label>:
                              <asp:Label ID="bmiValue" runat="server" Text="--" class=" col-lg-2"></asp:Label>
@@ -83,34 +76,36 @@
 
             <div class="row ">
                 <div class=" col-lg-10 offset-lg-1">
-                    <asp:GridView ID="breakfastGridView" runat="server" AutoGenerateColumns="False"
-                        AutoGenerateSelectButton="True" class="text-dark" PageSize="5" OnSelectedIndexChanged="breakfastGridView_SelectedIndexChanged"
-                        Width="100%" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" ForeColor="Black" GridLines="Vertical">
-                        <AlternatingRowStyle BackColor="White" />
-                        <Columns>
-                            <asp:BoundField DataField="Food" HeaderText="Food" SortExpression="Food" />
-                            <asp:BoundField DataField="Serving_Size" HeaderText="Serving_Size" SortExpression="Serving_Size" />
-                            <asp:BoundField DataField="Protein" HeaderText="Protein" SortExpression="Protein" />
-                            <asp:BoundField DataField="Carbs" HeaderText="Carbs" SortExpression="Carbs" />
-                            <asp:BoundField DataField="Fat" HeaderText="Fat" SortExpression="Fat" />
-                            <asp:BoundField DataField="Calories" HeaderText="Calories" SortExpression="Calories" />
-                            <asp:BoundField DataField="Time" HeaderText="Time" SortExpression="Time"
-                                ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden">
-                                <HeaderStyle CssClass="hidden"></HeaderStyle>
+                        <asp:GridView ID="breakfastGridView" runat="server" AutoGenerateColumns="False"
+                            AutoGenerateSelectButton="True" class="text-dark" PageSize="5" OnSelectedIndexChanged="breakfastGridView_SelectedIndexChanged"
+                            Width="100%" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" ForeColor="Black" GridLines="Vertical">
+                            <AlternatingRowStyle BackColor="White" />
+                            <Columns>
+                                <asp:BoundField DataField="Food" HeaderText="Food" SortExpression="Food" />
+                                <asp:BoundField DataField="Serving_Size" HeaderText="Serving_Size" SortExpression="Serving_Size" />
+                                <asp:BoundField DataField="Protein" HeaderText="Protein" SortExpression="Protein" />
+                                <asp:BoundField DataField="Carbs" HeaderText="Carbs" SortExpression="Carbs" />
+                                <asp:BoundField DataField="Fat" HeaderText="Fat" SortExpression="Fat" />
+                                <asp:BoundField DataField="Calories" HeaderText="Calories" SortExpression="Calories" />
+                                <asp:BoundField DataField="Time" HeaderText="Time" SortExpression="Time"
+                                    ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden">
+                                    <HeaderStyle CssClass="hidden"></HeaderStyle>
 
-                                <ItemStyle CssClass="hidden"></ItemStyle>
-                            </asp:BoundField>
-                        </Columns>
-                        <FooterStyle BackColor="#CCCC99" />
-                        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-                        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-                        <RowStyle BackColor="#F7F7DE" />
-                        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-                        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-                        <SortedAscendingHeaderStyle BackColor="#848384" />
-                        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-                        <SortedDescendingHeaderStyle BackColor="#575357" />
-                    </asp:GridView>
+                                    <ItemStyle CssClass="hidden"></ItemStyle>
+                                </asp:BoundField>
+                            </Columns>
+                            <FooterStyle BackColor="#CCCC99" />
+                            <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
+                            <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
+                            <RowStyle BackColor="#F7F7DE" />
+                            <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
+                            <SortedAscendingCellStyle BackColor="#FBFBF2" />
+                            <SortedAscendingHeaderStyle BackColor="#848384" />
+                            <SortedDescendingCellStyle BackColor="#EAEAD3" />
+                            <SortedDescendingHeaderStyle BackColor="#575357" />
+                        </asp:GridView>
+                    
+
                 </div>
             </div>
             <br />
@@ -125,34 +120,36 @@
             </div>
             <div class="row ">
                 <div class="col-lg-10 offset-lg-1">
-                    <asp:GridView ID="lunchGridView" runat="server" AutoGenerateColumns="False" AutoGenerateSelectButton="True"
-                        class="text-dark" PageSize="5" OnSelectedIndexChanged="lunchGridView_SelectedIndexChanged"
-                        Width="100%" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" ForeColor="Black" GridLines="Vertical">
-                        <AlternatingRowStyle BackColor="White" />
-                        <Columns>
-                            <asp:BoundField DataField="Food" HeaderText="Food" SortExpression="Food" />
-                            <asp:BoundField DataField="Serving_Size" HeaderText="Serving_Size" SortExpression="Serving_Size" />
-                            <asp:BoundField DataField="Protein" HeaderText="Protein" SortExpression="Protein" />
-                            <asp:BoundField DataField="Carbs" HeaderText="Carbs" SortExpression="Carbs" />
-                            <asp:BoundField DataField="Fat" HeaderText="Fat" SortExpression="Fat" />
-                            <asp:BoundField DataField="Calories" HeaderText="Calories" SortExpression="Calories" />
-                            <asp:BoundField DataField="Time" HeaderText="Time" SortExpression="Time"
-                                ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden">
-                                <HeaderStyle CssClass="hidden"></HeaderStyle>
+                        <asp:GridView ID="lunchGridView" runat="server" AutoGenerateColumns="False" AutoGenerateSelectButton="True"
+                            class="text-dark" PageSize="5" OnSelectedIndexChanged="lunchGridView_SelectedIndexChanged"
+                            Width="100%" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" ForeColor="Black" GridLines="Vertical">
+                            <AlternatingRowStyle BackColor="White" />
+                            <Columns>
+                                <asp:BoundField DataField="Food" HeaderText="Food" SortExpression="Food" />
+                                <asp:BoundField DataField="Serving_Size" HeaderText="Serving_Size" SortExpression="Serving_Size" />
+                                <asp:BoundField DataField="Protein" HeaderText="Protein" SortExpression="Protein" />
+                                <asp:BoundField DataField="Carbs" HeaderText="Carbs" SortExpression="Carbs" />
+                                <asp:BoundField DataField="Fat" HeaderText="Fat" SortExpression="Fat" />
+                                <asp:BoundField DataField="Calories" HeaderText="Calories" SortExpression="Calories" />
+                                <asp:BoundField DataField="Time" HeaderText="Time" SortExpression="Time"
+                                    ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden">
+                                    <HeaderStyle CssClass="hidden"></HeaderStyle>
 
-                                <ItemStyle CssClass="hidden"></ItemStyle>
-                            </asp:BoundField>
-                        </Columns>
-                        <FooterStyle BackColor="#CCCC99" />
-                        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-                        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-                        <RowStyle BackColor="#F7F7DE" />
-                        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-                        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-                        <SortedAscendingHeaderStyle BackColor="#848384" />
-                        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-                        <SortedDescendingHeaderStyle BackColor="#575357" />
-                    </asp:GridView>
+                                    <ItemStyle CssClass="hidden"></ItemStyle>
+                                </asp:BoundField>
+                            </Columns>
+                            <FooterStyle BackColor="#CCCC99" />
+                            <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
+                            <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
+                            <RowStyle BackColor="#F7F7DE" />
+                            <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
+                            <SortedAscendingCellStyle BackColor="#FBFBF2" />
+                            <SortedAscendingHeaderStyle BackColor="#848384" />
+                            <SortedDescendingCellStyle BackColor="#EAEAD3" />
+                            <SortedDescendingHeaderStyle BackColor="#575357" />
+                        </asp:GridView>
+                    
+
                 </div>
             </div>
             <br />
@@ -167,34 +164,35 @@
             </div>
             <div class=" row ">
                 <div class=" col-lg-10 offset-lg-1">
-                    <asp:GridView ID="snackGridView" runat="server" AutoGenerateColumns="False" AutoGenerateSelectButton="True"
-                        class="text-dark" PageSize="5" OnSelectedIndexChanged="snackGridView_SelectedIndexChanged"
-                        Width="100%" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" ForeColor="Black" GridLines="Vertical">
-                        <AlternatingRowStyle BackColor="White" />
-                        <Columns>
-                            <asp:BoundField DataField="Food" HeaderText="Food" SortExpression="Food" />
-                            <asp:BoundField DataField="Serving_Size" HeaderText="Serving_Size" SortExpression="Serving_Size" />
-                            <asp:BoundField DataField="Protein" HeaderText="Protein" SortExpression="Protein" />
-                            <asp:BoundField DataField="Carbs" HeaderText="Carbs" SortExpression="Carbs" />
-                            <asp:BoundField DataField="Fat" HeaderText="Fat" SortExpression="Fat" />
-                            <asp:BoundField DataField="Calories" HeaderText="Calories" SortExpression="Calories" />
-                            <asp:BoundField DataField="Time" HeaderText="Time" SortExpression="Time"
-                                ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden">
-                                <HeaderStyle CssClass="hidden"></HeaderStyle>
+                        <asp:GridView  ID="snackGridView" runat="server" AutoGenerateColumns="False" AutoGenerateSelectButton="True"
+                            class="text-dark" PageSize="5" OnSelectedIndexChanged="snackGridView_SelectedIndexChanged"
+                            Width="100%" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" ForeColor="Black" GridLines="Vertical">
+                            <AlternatingRowStyle BackColor="White" />
+                            <Columns>
+                                <asp:BoundField DataField="Food" HeaderText="Food" SortExpression="Food" />
+                                <asp:BoundField DataField="Serving_Size" HeaderText="Serving_Size" SortExpression="Serving_Size" />
+                                <asp:BoundField DataField="Protein" HeaderText="Protein" SortExpression="Protein" />
+                                <asp:BoundField DataField="Carbs" HeaderText="Carbs" SortExpression="Carbs" />
+                                <asp:BoundField DataField="Fat" HeaderText="Fat" SortExpression="Fat" />
+                                <asp:BoundField DataField="Calories" HeaderText="Calories" SortExpression="Calories" />
+                                <asp:BoundField DataField="Time" HeaderText="Time" SortExpression="Time"
+                                    ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden">
+                                    <HeaderStyle CssClass="hidden"></HeaderStyle>
 
-                                <ItemStyle CssClass="hidden"></ItemStyle>
-                            </asp:BoundField>
-                        </Columns>
-                        <FooterStyle BackColor="#CCCC99" />
-                        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-                        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-                        <RowStyle BackColor="#F7F7DE" />
-                        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-                        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-                        <SortedAscendingHeaderStyle BackColor="#848384" />
-                        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-                        <SortedDescendingHeaderStyle BackColor="#575357" />
-                    </asp:GridView>
+                                    <ItemStyle CssClass="hidden"></ItemStyle>
+                                </asp:BoundField>
+                            </Columns>
+                            <FooterStyle BackColor="#CCCC99" />
+                            <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
+                            <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
+                            <RowStyle BackColor="#F7F7DE" />
+                            <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
+                            <SortedAscendingCellStyle BackColor="#FBFBF2" />
+                            <SortedAscendingHeaderStyle BackColor="#848384" />
+                            <SortedDescendingCellStyle BackColor="#EAEAD3" />
+                            <SortedDescendingHeaderStyle BackColor="#575357" />
+                        </asp:GridView>
+
                 </div>
             </div>
             <br />
@@ -209,39 +207,39 @@
             </div>
             <div class="row">
                 <div class="col-lg-10  offset-lg-1">
-                    <asp:GridView ID="dinnerGridView" runat="server" AutoGenerateColumns="False" AutoGenerateSelectButton="True"
-                        class="text-dark" PageSize="5" OnSelectedIndexChanged="dinnerGridView_SelectedIndexChanged"
-                        Width="100%" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" ForeColor="Black" GridLines="Vertical">
-                        <AlternatingRowStyle BackColor="White" />
-                        <Columns>
-                            <asp:BoundField DataField="Food" HeaderText="Food" SortExpression="Food" />
-                            <asp:BoundField DataField="Serving_Size" HeaderText="Serving_Size" SortExpression="Serving_Size" />
-                            <asp:BoundField DataField="Protein" HeaderText="Protein" SortExpression="Protein" />
-                            <asp:BoundField DataField="Carbs" HeaderText="Carbs" SortExpression="Carbs" />
-                            <asp:BoundField DataField="Fat" HeaderText="Fat" SortExpression="Fat" />
-                            <asp:BoundField DataField="Calories" HeaderText="Calories" SortExpression="Calories" />
-                            <asp:BoundField DataField="Time" HeaderText="Time" SortExpression="Time"
-                                ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden">
-                                <HeaderStyle CssClass="hidden"></HeaderStyle>
+                        <asp:GridView ID="dinnerGridView" runat="server" AutoGenerateColumns="False" AutoGenerateSelectButton="True"
+                            class="text-dark" PageSize="5" OnSelectedIndexChanged="dinnerGridView_SelectedIndexChanged"
+                            Width="100%" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" CellPadding="4" ForeColor="Black" GridLines="Vertical">
+                            <AlternatingRowStyle BackColor="White" />
+                            <Columns>
+                                <asp:BoundField DataField="Food" HeaderText="Food" SortExpression="Food" />
+                                <asp:BoundField DataField="Serving_Size" HeaderText="Serving_Size" SortExpression="Serving_Size" />
+                                <asp:BoundField DataField="Protein" HeaderText="Protein" SortExpression="Protein" />
+                                <asp:BoundField DataField="Carbs" HeaderText="Carbs" SortExpression="Carbs" />
+                                <asp:BoundField DataField="Fat" HeaderText="Fat" SortExpression="Fat" />
+                                <asp:BoundField DataField="Calories" HeaderText="Calories" SortExpression="Calories" />
+                                <asp:BoundField DataField="Time" HeaderText="Time" SortExpression="Time"
+                                    ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden">
+                                    <HeaderStyle CssClass="hidden"></HeaderStyle>
 
-                                <ItemStyle CssClass="hidden"></ItemStyle>
-                            </asp:BoundField>
-                        </Columns>
-                        <FooterStyle BackColor="#CCCC99" />
-                        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-                        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-                        <RowStyle BackColor="#F7F7DE" />
-                        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-                        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-                        <SortedAscendingHeaderStyle BackColor="#848384" />
-                        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-                        <SortedDescendingHeaderStyle BackColor="#575357" />
-                    </asp:GridView>
+                                    <ItemStyle CssClass="hidden"></ItemStyle>
+                                </asp:BoundField>
+                            </Columns>
+                            <FooterStyle BackColor="#CCCC99" />
+                            <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
+                            <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
+                            <RowStyle BackColor="#F7F7DE" />
+                            <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
+                            <SortedAscendingCellStyle BackColor="#FBFBF2" />
+                            <SortedAscendingHeaderStyle BackColor="#848384" />
+                            <SortedDescendingCellStyle BackColor="#EAEAD3" />
+                            <SortedDescendingHeaderStyle BackColor="#575357" />
+                        </asp:GridView>
                 </div>
             </div>
-
+            </form>
 
         </div>
     </div>
 
-</asp:content>
+</asp:Content>
