@@ -2,26 +2,26 @@
 
 
 <asp:Content ContentPlaceHolderID="head" runat="server">
-    <title>BMI</title>
+    <title>Display DietPlan</title>
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link href="./Bootstrap-5/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Bootstrap-5/css/bootstrap.min.css" rel="stylesheet" />
     <script
         async="async"
         defer="defer"
-        src="./Bootstrap-5/css/js/bootstrap.bundle.min.js"></script>
+        src="../Bootstrap-5/css/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
         });
         //validation logic
-        const heightInputType = document.getElementById("heightInputTypeSelected");
-        console.log('slected', heightInputType);
-        if (heightInputType.selectedIndex !== 0) {
-            console.log('working...')
-            document.getElementById("heightInputFieldInInches").style.display = none;
-        }
+        //const heightInputType = document.getElementById("heightInputTypeSelected");
+        //console.log('slected', heightInputType);
+        //if (heightInputType.selectedIndex !== 0) {
+        //    console.log('working...')
+        //    document.getElementById("heightInputFieldInInches").style.display = none;
+        //}
 
 
     </script>
@@ -38,7 +38,9 @@
         </div>
 
         <div class="row offset-lg-2  justify-content-around ">
+            <form runat="server">
 
+            
             <div class="col-lg-6 ">
                 <asp:Label ID="breakfastLabel" runat="server" Text="Breakfast" Font-Size="20pt" Class="text-center text-light"></asp:Label>
                 <br />
@@ -113,7 +115,7 @@
                     <SortedDescendingHeaderStyle BackColor="#242121" />
                 </asp:GridView>
             </div>
-
+                </form>
         </div>
 
     </div>

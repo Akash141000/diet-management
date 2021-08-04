@@ -7,18 +7,21 @@ using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 
 namespace DietManagement.User
 {
     public partial class DisplayDietPlan : System.Web.UI.Page
     {
         int ma = 0, calorie;
-        String Struser,UserId,def;
+        GridView gridView;
+        String Struser, UserId, def;
+        string[] timeArray = new string[] { "Breakfast", "Lunch", "Snack", "Dinner" };
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
-                if (Session["Username"] != null)
+                if (Session["UserId"] != null)
                 {
 
                     Struser = Session["Username"].ToString();
@@ -27,52 +30,87 @@ namespace DietManagement.User
                 }
                 else
                 {
-                    Response.Redirect("~/Authentication/LoginPage.aspx");
+                    Response.Redirect("/Authentication/LoginPage.aspx");
                 }
 
-                check();
+                checkDietType();
 
                 ca();
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
                 {
-                    SqlCommand cmd = new SqlCommand(def, con);
-                    SqlCommand cd = new SqlCommand(def, con);
-                    SqlCommand cm = new SqlCommand(def, con);
-                    SqlCommand cmd1 = new SqlCommand(def, con);
-                    cmd.Parameters.AddWithValue("@cal", calorie);
-                    cmd.Parameters.AddWithValue("@time", "Breakfast");
-                    cd.Parameters.AddWithValue("@cal", calorie);
-                    cd.Parameters.AddWithValue("@time", "Lunch");
-                    cm.Parameters.AddWithValue("@cal", calorie);
-                    cm.Parameters.AddWithValue("@time", "Snack");
-                    cmd1.Parameters.AddWithValue("@cal", calorie);
-                    cmd1.Parameters.AddWithValue("@time", "Dinner");
                     con.Open();
-                    SqlDataReader r = cmd.ExecuteReader();
-                    SqlDataReader s = cd.ExecuteReader();
-                    SqlDataReader t = cm.ExecuteReader();
-                    SqlDataReader u = cmd1.ExecuteReader(); 
-                    breakFastGridView.DataSource = r;
-                    breakFastGridView.DataBind();
-                    r.Close();
-                    lunchGridView.DataSource = s;
-                    lunchGridView.DataBind();
-                    s.Close();
-                    snackGridView.DataSource = t;
-                    snackGridView.DataBind();
-                    t.Close();
-                    dinnerGridView.DataSource = u;
-                    dinnerGridView.DataBind();
-                    u.Close();
+                    SqlCommand cmd = new SqlCommand(def, con);
+                    if(def == null)
+                    {
+                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('def is null')", true);
+                        return;
+                    }
+                    
+                    foreach(string time in timeArray)
+                    {
+                        
+                        if(time == "Breakfast")
+                        {
+                            gridView = breakFastGridView;
+                        }
+                        else if (time == "Lunch")
+                        {
+                            gridView = lunchGridView;
+                        }
+                        else if (time == "Snack")
+                        {
+                            gridView = snackGridView;
+                        }
+                        else
+                        {
+                            gridView = dinnerGridView;
+                        }
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@cal", calorie);
+                        cmd.Parameters.AddWithValue("@time", time);
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        gridView.DataSource = reader;
+                        gridView.DataBind();
+                        reader.Close();
+                    }
                 }
-               
-                
-               
+
+                //SqlCommand cmd = new SqlCommand(def, con);
+                ////SqlCommand cd = new SqlCommand(def, con);
+                ////SqlCommand cm = new SqlCommand(def, con);
+                ////SqlCommand cmd1 = new SqlCommand(def, con);
+                //cmd.Parameters.AddWithValue("@cal", calorie);
+                //cmd.Parameters.AddWithValue("@time", "Breakfast");
+                ////cd.Parameters.AddWithValue("@cal", calorie);
+                ////cd.Parameters.AddWithValue("@time", "Lunch");
+                ////cm.Parameters.AddWithValue("@cal", calorie);
+                ////cm.Parameters.AddWithValue("@time", "Snack");
+                ////cmd1.Parameters.AddWithValue("@cal", calorie);
+                ////cmd1.Parameters.AddWithValue("@time", "Dinner");
+                //con.Open();
+                //SqlDataReader r = cmd.ExecuteReader();
+                //SqlDataReader s = cd.ExecuteReader();
+                //SqlDataReader t = cm.ExecuteReader();
+                //SqlDataReader u = cmd1.ExecuteReader();
+                //breakFastGridView.DataSource = r;
+                //breakFastGridView.DataBind();
+                //r.Close();
+                //lunchGridView.DataSource = s;
+                //lunchGridView.DataBind();
+                //s.Close();
+                //snackGridView.DataSource = t;
+                //snackGridView.DataBind();
+                //t.Close();
+                //dinnerGridView.DataSource = u;
+                //dinnerGridView.DataBind();
+                //u.Close();
+
+
             }
             catch (NullReferenceException)
             {
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
-                Response.Redirect("/User/BmiCalculation.aspx");
+                //Response.Redirect("/User/BmiCalculation.aspx");
             }
 
         }
@@ -123,47 +161,51 @@ namespace DietManagement.User
                 calorie = 3000;
             }
         }
-        protected void check()
+        protected void checkDietType()
         {
             try
             {
                 String d, e;
                 int i;
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
-                con.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM [UserBmi] WHERE UserId=@UserId ", con);
-                cmd.Parameters.AddWithValue("@userId", UserId);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                con.Close();
-                if (dt.Rows.Count > 0)
+                ;
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
                 {
-                    SqlCommand cmd1 = new SqlCommand("SELECT MaintananceCalories,FoodCategory FROM [UserBmi] WHERE UserId=@UserId ", con);
-                    cmd1.Parameters.AddWithValue("@userId", UserId);
                     con.Open();
-                    SqlDataReader read = cmd1.ExecuteReader();
-                    read.Read();
-                    d = read["Maintanance"].ToString();
-                    e = read["Food_Catagory"].ToString();
-                    i = Convert.ToInt32(e);
-                    ma = Convert.ToInt32(d);
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM [UserBmi] WHERE UserId=@userId ", con);
+                    cmd.Parameters.AddWithValue("@userId", UserId);
+                    var found = cmd.ExecuteNonQuery();
 
-                    con.Close();
-                    if (i == 0)
+                    //SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    //DataTable dt = new DataTable();
+                    //da.Fill(dt);
+                    //con.Close();
+                    if (found != 0)
                     {
-                        def = "SELECT Food,Quantity FROM [NDiet] WHERE calories=@cal and Time=@time;";
+                        SqlCommand cmd1 = new SqlCommand("SELECT MaintananceCalories,FoodCategory FROM [UserBmi] WHERE UserId=@userId ", con);
+                        cmd1.Parameters.AddWithValue("@userId", UserId);
+
+                        SqlDataReader read = cmd1.ExecuteReader();
+                        read.Read();
+                        d = read["MaintananceCalories"].ToString();
+                        e = read["FoodCategory"].ToString();
+                        i = Convert.ToInt32(e);
+                        ma = Convert.ToInt32(d);
+
+                        if (i == 0)
+                        {
+                            def = "SELECT Food,Quantity FROM [SavedDiet] WHERE calories=@cal AND Time=@time";
+                        }
+                        else
+                        {
+                            def = "SELECT Food,Quantity FROM [SavedDiet] WHERE calories=@cal AND Time=@time";
+                        }
                     }
+
                     else
                     {
-                        def = "SELECT Food,Quantity FROM [NDiet] WHERE calories=@cal and Time=@time;";
+                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Please calculate your BMI first')", true);
+                        //Response.Redirect("/User/BmiCalculation.aspx");
                     }
-                }
-
-                else
-                {
-                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Please calculate your BMI first')", true);
-                    Response.Redirect("BMI.aspx");
                 }
             }
             catch (Exception)

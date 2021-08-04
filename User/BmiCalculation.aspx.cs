@@ -139,7 +139,7 @@ namespace DietManagement.User
 
                         if (executed == 0)
                         {
-                            errorSavingBmi.Text = "Saved Successfully";
+                            errorSavingBmi.Text = "Error saving";
                             
                             //throw new Exception("Unable to save data");
                             return;
