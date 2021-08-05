@@ -32,7 +32,6 @@ namespace DietManagement.User
 
             try
             {
-                calculateDiet();
 
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
                 {
@@ -40,91 +39,101 @@ namespace DietManagement.User
                     SqlCommand cmd = new SqlCommand("SELECT MaintananceCalories,ProteinRequired,CarbsRequired,FatsRequired  FROM [UserBmi] WHERE UserID=@userId", con);
                     cmd.Parameters.AddWithValue("@userId", UserId);
                     SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                    maintananceCalories = int.Parse(reader["Maintanance"].ToString());
-                    proteinRequired = int.Parse(reader["Protein"].ToString());
-                    carbsRequired = int.Parse(reader["Carbs"].ToString());
-                    fatsRequired = int.Parse(reader["Fat"].ToString());
+                    while (reader.Read())
+                    {
+                        maintananceCalories = int.Parse(reader["MaintananceCalories"].ToString());
+                        proteinRequired = int.Parse(reader["ProteinRequired"].ToString());
+                        carbsRequired = int.Parse(reader["CarbsRequired"].ToString());
+                        fatsRequired = int.Parse(reader["FatsRequired"].ToString());
+                    }
+
 
                 }
+                calculateDiet();
+
                 GridDisplay();
-                //Grid1();
-                //Grid1();
-                //Grid2();
-                //Grid3();
-                //Grid4();
             }
             catch (Exception)
             {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('1Something went wrong please try again')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
             }
 
         }
-        public void proteinAmount()
-        {
-            if (proteinRequired / 2 > totalProtein)
-            {
-                amountOfProtein = "low";
-            }
-            else if (proteinRequired + proteinRequired / 2 < totalProtein)
-            {
-                amountOfProtein = "high";
-            }
-            else if (proteinRequired / 2 < totalProtein && totalProtein < proteinRequired + proteinRequired / 2)
-            {
-                amountOfProtein = "perfect";
-            }
+        private void analyseDiet() {
+            proteinAmount();
+            carbsAmount();
+            fatsAmount();
+            maintananceCaloriesAmount();
 
+
+             void proteinAmount()
+            {
+                if (proteinRequired / 2 > totalProtein)
+                {
+                    amountOfProtein = "low";
+                }
+                else if (proteinRequired + proteinRequired / 2 < totalProtein)
+                {
+                    amountOfProtein = "high";
+                }
+                else if (proteinRequired / 2 < totalProtein && totalProtein < proteinRequired + proteinRequired / 2)
+                {
+                    amountOfProtein = "perfect";
+                }
+
+            }
+             void carbsAmount()
+            {
+                if (carbsRequired / 2 > totalCarbs)
+                {
+                    amountOfCarbs = "low";
+                }
+                else if (carbsRequired + carbsRequired / 2 < totalCarbs)
+                {
+                    amountOfCarbs = "high";
+                }
+                else if (carbsRequired / 2 < totalCarbs && totalCarbs < carbsRequired + carbsRequired / 2)
+                {
+                    amountOfCarbs = "perfect";
+                }
+            }
+             void fatsAmount()
+            {
+                if (fatsRequired / 2 > totalfats)
+                {
+                    amountOfFats = "low";
+                }
+                else if (fatsRequired + fatsRequired / 2 < totalfats)
+                {
+                    amountOfFats = "high";
+                }
+                else if (fatsRequired / 2 < totalfats && totalfats < fatsRequired + fatsRequired / 2)
+                {
+                    amountOfFats = "perfect";
+                }
+            }
+             void maintananceCaloriesAmount()
+            {
+                if (maintananceCalories - 50 < Totalcal && Totalcal < maintananceCalories + 50)
+                {
+                    amountOfCalories = "Perfect";
+                }
+                else if (maintananceCalories - 50 > Totalcal)
+                {
+                    amountOfCalories = "Low";
+                }
+                else if (maintananceCalories + 50 < Totalcal)
+                {
+                    amountOfCalories = "High";
+                }
+            }
         }
-        public void carbsAmount()
-        {
-            if (carbsRequired / 2 > totalCarbs)
-            {
-                amountOfCarbs = "low";
-            }
-            else if (carbsRequired + carbsRequired / 2 < totalCarbs)
-            {
-                amountOfCarbs = "high";
-            }
-            else if (carbsRequired / 2 < totalCarbs && totalCarbs < carbsRequired + carbsRequired / 2)
-            {
-                amountOfCarbs = "perfect";
-            }
-        }
-        public void fatsAmount()
-        {
-            if (fatsRequired / 2 > totalfats)
-            {
-                amountOfFats = "low";
-            }
-            else if (fatsRequired + fatsRequired / 2 < totalfats)
-            {
-                amountOfFats = "high";
-            }
-            else if (fatsRequired / 2 < totalfats && totalfats < fatsRequired + fatsRequired / 2)
-            {
-                amountOfFats = "perfect";
-            }
-        }
-        public void maintananceCaloriesAmount()
-        {
-            if (maintananceCalories - 50 < Totalcal && Totalcal < maintananceCalories + 50)
-            {
-                amountOfCalories = "Perfect";
-            }
-            else if (maintananceCalories - 50 > Totalcal)
-            {
-                amountOfCalories = "Low";
-            }
-            else if (maintananceCalories + 50 < Totalcal)
-            {
-                amountOfCalories = "High";
-            }
-        }
+       
 
         protected void calculateDiet()
         {
-            //try
-            //{
+            try
+            {
 
                 checkBtnPressed = checkBtnPressed + 1;
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
@@ -136,48 +145,17 @@ namespace DietManagement.User
 
                     while (reader.Read())
                     {
-                        string readProtein = reader["Protein"].ToString();
-                        totalProtein = totalProtein + Int32.Parse(readProtein);
-                        string readCarbs = reader["Protein"].ToString();
-                        totalCarbs = totalCarbs + Int32.Parse(readCarbs);
-                        string readFats = reader["Protein"].ToString();
-                        totalfats = totalfats + Int32.Parse(readFats);
-                        string readCalories = reader["Calories"].ToString();
-                        Totalcal = Totalcal + Int32.Parse(readCalories);
+                        float protein = float.Parse(reader["Protein"].ToString());
+                        totalProtein = totalProtein + (int)protein;
+                        float carbs = float.Parse(reader["Carbohydrate"].ToString());
+                        totalCarbs = totalCarbs + (int)carbs;
+                        float fats = float.Parse(reader["Total_Fat"].ToString());
+                        totalfats = totalfats + (int)fats;
+                        float calories = float.Parse(reader["Calories"].ToString());
+                        Totalcal = Totalcal + (int)calories;
                     }
 
-                    //string readProtein = reader["Protein"].ToString();
-                    //float proteinConverted = float.Parse(readProtein);
-                    //totalProtein = totalProtein + Int32.Parse(proteinConverted.ToString());
-                    //string readCarbs = reader["Protein"].ToString();
-                    //float carbsConverted = float.Parse(readCarbs);
-                    //totalCarbs = totalCarbs + int.Parse(carbsConverted);
-                    //string readFats = reader["Protein"].ToString();
-                    //float fatsConverted = float.Parse(readFats);
-                    //totalfats = totalfats + int.Parse(readFats);
-                    //string readCalories = reader["Calories"].ToString();
-                    //Totalcal = Totalcal + Int32.Parse(readCalories);
-
-                    //while (reader.Read())
-                    //{
-                    //    string readProtein = reader["Protein"].ToString();
-                    //    totalProtein = totalProtein + int.Parse(reader["Protein"].ToString());
-                    //    string readCarbs = reader["Protein"].ToString();
-                    //    totalCarbs = totalCarbs + int.Parse(reader["Carbohydrate"].ToString());
-                    //    string readFats = reader["Protein"].ToString();
-                    //    totalfats = totalfats + int.Parse(reader["Total_Fat"].ToString());
-                    //    string readCalories = reader["Protein"].ToString();
-                    //    Totalcal = Totalcal + int.Parse(reader["Calories"].ToString());
-                    //}
-
-                    //protein = float.Parse(reader["Protein"].ToString());
-                    //totalProtein = totalProtein + (int)protein;
-                    //carbs = float.Parse(reader["Carbohydrate"].ToString());
-                    //totalCarbs = totalCarbs + (int)carbs;
-                    //fats = float.Parse(reader["Total_Fat"].ToString());
-                    //totalfats = totalfats + (int)fats;
-                    //calories = float.Parse(reader["Calories"].ToString());
-                    //Totalcal = Totalcal + (int)calories;
+                    
                 }
 
                 if (Totalcal == 0)
@@ -190,21 +168,18 @@ namespace DietManagement.User
                 carbohydrateAmountLbl.Text = totalCarbs.ToString();
                 fatsAmountLbl.Text = totalfats.ToString();
                 totalCaloriesLbl.Text = Totalcal.ToString();
-                proteinAmount();
-                carbsAmount();
-                fatsAmount();
-                maintananceCaloriesAmount();
+                analyseDiet(); // check diet info
                 displayMaintananceCaloriesLbl.Text = "Maintanance calories" + " " + "is" + " " + amountOfCalories + "<br>" + "protein" + " " + "is" + " " + amountOfProtein + "<br>" + "Carbohydrate" + " " + "is" + " " + amountOfCarbs + "<br>" + "Total Fat" + " " + "is" + " " + amountOfFats;
                 totalProtein = 0;
                 totalCarbs = 0;
                 totalfats = 0;
                 Totalcal = 0;
 
-            //}
-            //catch
-            //{
-            //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('2Something went wrong please try again')", true);
-            //}
+            }
+            catch
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
+            }
         }
 
         protected void checkBtn_Click(object sender, EventArgs e)
@@ -262,7 +237,7 @@ namespace DietManagement.User
             }
             catch
             {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('3Something went wrong please try again')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Something went wrong please try again')", true);
             }
         }
         protected void breakfastGridView_OnRowDeleting(object sender, GridViewDeleteEventArgs e)

@@ -4,16 +4,11 @@
 
 
 <asp:Content  runat="server" ContentPlaceHolderID="head">
-    <title>BMI</title>
+    <title>Intake History</title>
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link href="../Bootstrap-5/css/bootstrap.min.css" rel="stylesheet" />
-    <script
-        async="async"
-        defer="defer"
-        src="../Bootstrap-5/css/js/bootstrap.bundle.min.js"></script>
-
+   
 
     
 
@@ -53,7 +48,7 @@
                             <asp:Button
                                 ID="displayIntakeDataBtn" runat="server"
                                 Text="Display" OnClick="displayIntakeDataBtn_Click" data-placement="right" title="Click to Display data" data-toggle="tooltip" class="btn-outline-dark form-control" />
-                            <asp:Button runat="server" OnClick="statisticsBtn_Click"
+                            <asp:Button runat="server" Visible="false" OnClick="statisticsBtn_Click"
                                 ID="statisticsBtn" Text="Statistics"  data-placement="right" title="Click to display Graph" data-toggle="tooltip"
                                 class="btn-outline-dark form-control" />
 

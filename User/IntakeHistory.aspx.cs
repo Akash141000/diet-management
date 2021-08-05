@@ -14,7 +14,7 @@ namespace DietManagement.User
     public partial class IntakeHistory : System.Web.UI.Page
     {
         string loggedUser, UserId;
-        int maintanan;
+        int maintananceCalories;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Username"] != null && Session["UserId"] != null)
@@ -45,9 +45,11 @@ namespace DietManagement.User
                     SqlCommand cmd = new SqlCommand("SELECT MaintananceCalories FROM [UserBmi] WHERE UserId=@userId", con);
                     cmd.Parameters.AddWithValue("@userId", UserId);
 
-                    SqlDataReader read = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                    read.Read();
-                    maintanan = int.Parse(read["MaintananceCalories"].ToString());
+                    SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    while (reader.Read()) {
+                        maintananceCalories = int.Parse(reader["MaintananceCalories"].ToString());
+
+                    };
                    
                 }
                 
@@ -65,8 +67,8 @@ namespace DietManagement.User
         protected void bt()
         {
 
-            float temp1, temp2, temp3;
-            int ma = 0, ro = 0;
+           
+            int ma = 0, ro = 0, temp1, temp2, temp3;
 
 
             try
@@ -101,11 +103,11 @@ namespace DietManagement.User
                         while (read.Read())
                         {
 
-                            temp1 = float.Parse(read["Protein"].ToString());
+                            temp1 = int.Parse(read["Protein"].ToString());
                             Totalprot = Totalprot + (int)temp1;
-                            temp2 = float.Parse(read["Carbohydrate"].ToString());
+                            temp2 = int.Parse(read["Carbohydrate"].ToString());
                             Totalcarb = Totalcarb + (int)temp2;
-                            temp3 = float.Parse(read["Total Fat"].ToString());
+                            temp3 = int.Parse(read["Total Fat"].ToString());
                             Totalfat = Totalfat + (int)temp3;
 
                         }
@@ -130,7 +132,7 @@ namespace DietManagement.User
                         else
                         {
                             SqlCommand cmdQ = new SqlCommand("INSERT INTO [UserIntake] (Maintanance,Caloricint,Datetime,Username) values(@main,@cal,@date,@User)", con);
-                            cmdQ.Parameters.AddWithValue("@main", maintanan);
+                            cmdQ.Parameters.AddWithValue("@main", maintananceCalories);
                             cmdQ.Parameters.AddWithValue("@cal", ma);
                             cmdQ.Parameters.AddWithValue("@date", temp);
                             cmdQ.Parameters.AddWithValue("@User", loggedUser);

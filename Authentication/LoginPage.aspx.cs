@@ -17,11 +17,87 @@ namespace DietManagement
 {
     public partial class LoginPage : System.Web.UI.Page
     {
+        readonly string _machineKey = "cookieMachineKey";
         protected void Page_Load(object sender, EventArgs e)
         {
+            HttpCookie userInfo = Request.Cookies["userInfo"];
+            if (userInfo != null)
+            {
+               
+                var userId = Convert.FromBase64String(Request.Cookies["userInfo"].Value);
+                var decryptedUserId = MachineKey.Unprotect(userId, _machineKey);                
+               
+                getUser(null, decryptedUserId);
+                Response.Redirect("/User/BmiCalculation.aspx");
+
+                return;
+            }
+
             Session["UserId"] = null;
             Session["Username"] = null;
             Session["Admin"] = null;
+            return;
+        }
+
+        protected void getUser(string hashedPassword = null, byte[] protectedUserId = null)
+        {
+            if (protectedUserId == null)
+            {
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
+                {
+
+                    connection.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM [User] WHERE Username=@Username AND Password=@Password", connection);
+                    cmd.Parameters.AddWithValue("@Username", usernameInput.Text);
+                    cmd.Parameters.AddWithValue("@Password", hashedPassword);
+                    var logged = cmd.ExecuteScalar();
+
+                    if (logged == null)
+                    {
+                        loginResult.Visible = true;
+                        loginResult.Text = "Wrong Details";
+                        return;
+
+                    }
+
+                    string username = usernameInput.Text.ToString();
+                    string userId = logged.ToString();
+                    Session["Username"] = username;
+                    Session["UserId"] = userId;
+
+                    var cookieUserId = Encoding.UTF8.GetBytes(userId);
+
+                    var encryptedUserId = Convert.ToBase64String(MachineKey.Protect(cookieUserId, _machineKey));
+
+                    HttpCookie userInfo = new HttpCookie("userInfo", encryptedUserId);
+                    //userInfo["UserId"] = ;
+                    userInfo.Expires.Add(new TimeSpan(1, 0, 0));
+                    Response.Cookies.Add(userInfo);
+                    Response.Redirect("../User/BmiCalculation.aspx");
+                    return;
+                }
+
+            }
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
+            {
+                string usernameFound = null;
+                connection.Open();
+                var unprotectedUserId = Encoding.UTF8.GetString(protectedUserId);
+                SqlCommand cmd = new SqlCommand("SELECT Username FROM [User] WHERE UserId=@userId", connection);
+                cmd.Parameters.AddWithValue("@userId", unprotectedUserId);
+                SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while(reader.Read()){
+                    usernameFound = reader["Username"].ToString();
+                }
+                if (usernameFound != null)
+                {
+                    Session["UserId"] = unprotectedUserId;
+                    Session["Username"] = usernameFound;
+                    return;
+                }
+                throw new Exception("Username not found!");
+
+            }
         }
 
 
@@ -49,48 +125,7 @@ namespace DietManagement
                     }
                     var hash_pass = sb.ToString();
 
-
-                    using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
-                    {
-
-
-
-                        connection.Open();
-                        SqlCommand cmd = new SqlCommand("SELECT * FROM [User] WHERE Username=@Username AND Password=@Password", connection);
-                        cmd.Parameters.AddWithValue("@Username", usernameInput.Text);
-                        cmd.Parameters.AddWithValue("@Password", hash_pass);
-                        var logged = cmd.ExecuteScalar();
-                        
-                        if (logged == null)
-                        {
-                            loginResult.Visible = true;
-                            loginResult.Text = "Wrong Details";
-                            return;
-
-                        }
-
-                        Session["Username"] = usernameInput.Text.ToString();
-                        Session["UserId"] = logged.ToString();
-                        Response.Redirect("../User/BmiCalculation.aspx");
-                        return;
-                        //SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        //DataTable dt = new DataTable();
-                        //da.Fill(dt);
-                        //if (dt.Rows.Count > 0)
-                        //{
-                        //    Session["Username"] = usernameInput.Text.ToString();
-                        //    Response.Redirect("~/User/BmiCalculation.aspx");
-                        //    return;
-                        //}
-
-                        //else
-                        //{
-
-                        //    loginResult.Visible = true;
-                        //    loginResult.Text = "Wrong Details";
-                        //    return;
-                        //}
-                    }
+                    getUser(hash_pass);
                 }
             }
             catch (Exception)

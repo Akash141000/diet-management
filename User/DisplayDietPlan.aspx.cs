@@ -156,11 +156,11 @@ namespace DietManagement.User
 
                         if (i == 0)
                         {
-                            def = "SELECT Food,Quantity FROM [SavedDiet] WHERE calories=@cal AND Time=@time";
+                            def = "SELECT Food,Quantity FROM [SavedVegDiet] WHERE calories=@cal AND Time=@time";
                         }
                         else
                         {
-                            def = "SELECT Food,Quantity FROM [SavedDiet] WHERE calories=@cal AND Time=@time";
+                            def = "SELECT Food,Quantity FROM [SavedNonVegDiet] WHERE calories=@cal AND Time=@time";
                         }
                     }
                     else

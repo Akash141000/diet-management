@@ -6,25 +6,7 @@
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link href="../Bootstrap-5/css/bootstrap.min.css" rel="stylesheet" />
-    <script
-        async="async"
-        defer="defer"
-        src="../Bootstrap-5/css/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
-        //validation logic
-        //const heightInputType = document.getElementById("heightInputTypeSelected");
-        //console.log('slected', heightInputType);
-        //if (heightInputType.selectedIndex !== 0) {
-        //    console.log('working...')
-        //    document.getElementById("heightInputFieldInInches").style.display = none;
-        //}
-
-
-    </script>
+   
 </asp:Content>
 
 <asp:Content ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
@@ -83,7 +65,7 @@
                 <asp:Label ID="snackLabel" runat="server" Text="Snack" Font-Size="20pt" Class="text-center text-light"></asp:Label>
                 <br />
                 <asp:GridView ID="snackGridView" runat="server" PageSize="5" ForeColor="Black" Width="419px" class="text"
-                    Style="center" Font-Bold="True" Font-Size="15px" CellPadding="4"
+                     Font-Bold="True" Font-Size="15px" CellPadding="4"
                     GridLines="Horizontal" BackColor="White" BorderColor="#CCCCCC"
                     BorderStyle="None" BorderWidth="1px">
                     <FooterStyle BackColor="#CCCC99" ForeColor="Black" />
@@ -102,7 +84,7 @@
                 <asp:Label ID="dinnerLabel" runat="server" Text="Dinner" Font-Size="20pt" Class="text-center text-light"></asp:Label>
                 <br />
                 <asp:GridView ID="dinnerGridView" runat="server" PageSize="5" ForeColor="Black" Width="418px" class="text"
-                    Style="center" Font-Bold="True" Font-Size="15px" CellPadding="4"
+                    Font-Bold="True" Font-Size="15px" CellPadding="4"
                     GridLines="Horizontal" BackColor="White" BorderColor="#CCCCCC"
                     BorderStyle="None" BorderWidth="1px">
                     <FooterStyle BackColor="#CCCC99" ForeColor="Black" />

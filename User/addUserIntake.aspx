@@ -6,11 +6,7 @@
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link href="../Bootstrap-5/css/bootstrap.min.css" rel="stylesheet" />
-    <script
-        async="async"
-        defer="defer"
-        src="../Bootstrap-5/css/js/bootstrap.bundle.min.js"></script>
+   
 </asp:Content>
 
 <asp:Content runat="server" ContentPlaceHolderID="MainContentPlaceHolder">
