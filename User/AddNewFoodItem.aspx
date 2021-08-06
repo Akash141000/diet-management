@@ -20,7 +20,7 @@
     
 
 
-        <div class="container-fluid img-fluid min-vh-100"style="background-image: url('back/gw.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
+        <div class="container-fluid img-fluid min-vh-100"style="background-image: url('/Images/gw.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
             <div class="row pad justify-content-around">
                 <form runat="server">
                 <div class="col-lg-4 ">

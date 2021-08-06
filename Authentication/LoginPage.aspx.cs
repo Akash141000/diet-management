@@ -39,7 +39,25 @@ namespace DietManagement
             return;
         }
 
-        protected void getUser(string hashedPassword = null, byte[] protectedUserId = null)
+        protected string hashPassword()
+        {
+            byte[] hs = new byte[50];
+            string pass = passwordInput.Text;
+            MD5 md5 = MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(pass);
+            byte[] hash = md5.ComputeHash(inputBytes);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                hs[i] = hash[i];
+                sb.Append(hs[i].ToString("x2"));
+            }
+            var hash_pass = sb.ToString();
+            return hash_pass;
+
+        }
+
+        protected Boolean getUser(string hashedPassword = null, byte[] protectedUserId = null)
         {
             if (protectedUserId == null)
             {
@@ -56,7 +74,7 @@ namespace DietManagement
                     {
                         loginResult.Visible = true;
                         loginResult.Text = "Wrong Details";
-                        return;
+                        return false;
 
                     }
 
@@ -74,7 +92,7 @@ namespace DietManagement
                     userInfo.Expires.Add(new TimeSpan(1, 0, 0));
                     Response.Cookies.Add(userInfo);
                     Response.Redirect("../User/BmiCalculation.aspx");
-                    return;
+                    return true;
                 }
 
             }
@@ -93,9 +111,9 @@ namespace DietManagement
                 {
                     Session["UserId"] = unprotectedUserId;
                     Session["Username"] = usernameFound;
-                    return;
+                    return true;
                 }
-                throw new Exception("Username not found!");
+                return false;
 
             }
         }
@@ -112,19 +130,7 @@ namespace DietManagement
                 }
                 else
                 {
-                    byte[] hs = new byte[50];
-                    string pass = passwordInput.Text;
-                    MD5 md5 = MD5.Create();
-                    byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(pass);
-                    byte[] hash = md5.ComputeHash(inputBytes);
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < hash.Length; i++)
-                    {
-                        hs[i] = hash[i];
-                        sb.Append(hs[i].ToString("x2"));
-                    }
-                    var hash_pass = sb.ToString();
-
+                    string hash_pass = hashPassword();
                     getUser(hash_pass);
                 }
             }
@@ -139,47 +145,16 @@ namespace DietManagement
 
             try
             {
-                byte[] hs = new byte[50];
-                string pass = passwordInput.Text;
-                MD5 md5 = MD5.Create();
-                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(pass);
-                byte[] hash = md5.ComputeHash(inputBytes);
-                StringBuilder sb = new StringBuilder();
+                string hash_pass = hashPassword();
 
-
-                for (int i = 0; i < hash.Length; i++)
+                Boolean found = getUser(hash_pass);
+                if (found)
                 {
-                    hs[i] = hash[i];
-                    sb.Append(hs[i].ToString("x2"));
+                    Response.Redirect("/Authentication/ChangePassword.aspx");
+                    return;
                 }
-                var hash_pass = sb.ToString();
 
-
-                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString))
-                {
-                    connection.Open();
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM [User] where Username=@Username and Password=@Password", connection);
-                    cmd.Parameters.AddWithValue("@Username", usernameInput.Text);
-                    cmd.Parameters.AddWithValue("@Password", hash_pass);
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    if (dt.Rows.Count > 0)
-                    {
-                        Session["Username"] = usernameInput.Text.ToString();
-                        Response.Redirect("~/ChangePassword.aspx");
-                        return;
-                    }
-
-                    else
-                    {
-
-
-                        loginResult.Visible = true;
-                        loginResult.Text = "Wrong Details";
-                        return;
-                    }
-                }
+               
             }
             catch (Exception)
             {

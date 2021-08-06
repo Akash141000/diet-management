@@ -10,7 +10,7 @@
 </asp:Content>
 
 <asp:Content ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
-    <div class="container-fluid img-fluid min-vh-100" style="background-image: url('back/diet5.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
+    <div class="container-fluid img-fluid min-vh-100" style="background-image: url('/Images/diet5.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
         <div class="row  justify-content-around">
             <div class="col-lg-12  justify-content-end text-light text-lg-right " style="font-size: 20px">
                 <span class="fas fa-user">

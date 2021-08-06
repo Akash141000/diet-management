@@ -82,7 +82,7 @@
                         <div class="form-group row">
                             <div class="col-lg-4 offset-lg-4">  
                                 <asp:Button runat="server"  Text="ForgotPassword?" ForeColor="White" class="btn btn-link" Font-Size="Small"
-                                  OnClientClick="window.open('Forgot.aspx','FP','width=800,height=280,top=300,left=500,fullscreen=no,resizable=0');"/>
+                                  OnClientClick="window.open('/Authentication/ForgotPassword.aspx','FP','width=800,height=280,top=300,left=500,fullscreen=no,resizable=0');"/>
                             </div>
                         </div>
 

@@ -10,7 +10,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link href="../Bootstrap-5/css/bootstrap.css" rel="stylesheet" />
     <script async="async" defer="defer" src="../Bootstrap-5/js/bootstrap.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
+    
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js " type="text/javascript"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -20,21 +22,26 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+               
+                   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/User/BmiCalculation.aspx">BMI</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/User/DisplayDietPlan.aspx">DietPlan</a>
+                        <a class="nav-link " aria-current="page" href="/User/DisplayDietPlan.aspx">DietPlan</a>
                     </li>
                      <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/User/CreateDietPlan.aspx">Create <br />DietPlan</a>
+                        <a class="nav-link " aria-current="page" href="/User/CreateDietPlan.aspx">Create <br />DietPlan</a>
                     </li>
                      <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/User/addUserIntake.aspx">Add <br /> UserIntake</a>
+                        <a class="nav-link " aria-current="page" href="/User/addUserIntake.aspx">Add <br /> UserIntake</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/User/IntakeHistory.aspx">Intake<br /> History</a>
+                        <a class="nav-link " aria-current="page" href="/User/IntakeHistory.aspx">Intake<br /> History</a>
+                    </li>
+                       
+                     <li class="nav-item">
+                        <button id="logoutBtn"  >logout</button>
                     </li>
                 </ul>
             </div>
@@ -45,6 +52,32 @@
         <asp:ContentPlaceHolder ID="MainContentPlaceHolder" runat="server">
         </asp:ContentPlaceHolder>
     </div>
+
+    <script type="text/javascript">
+        const logoutBtn = document.getElementById("logoutBtn");
+        logoutBtn.addEventListener('click', logout);
+
+        function logout() {
+            $.ajax({
+                type: "GET",
+                url: "/Authentication/logout.asmx/logoutBtnClicked",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: (data) => {
+                    if (data) {
+                        $(location).attr('href', "/");
+                        $.cookie("userInfo", null, {path:"/"});
+                    };
+                },
+                failure: function () {
+                    console.log("failed");
+                }
+            });
+        }
+
+    </script>
+
+    
 </body>
 </html>
 

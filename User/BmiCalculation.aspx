@@ -22,7 +22,7 @@
 
     <div
         class="container-fluid img-fluid min-vh-100"
-        style="background-image: url('back/e1.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%;">
+        style="background-image: url('/Images/e1.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%;">
         <form runat="server" method="post" class="row  justify-content-around">
             <div
                 class="col-lg-12  justify-content-end text-light text-lg-right"
@@ -308,12 +308,14 @@
             </div>
         </form>
     </div>
+    <script type="text/x-jquery-tmpl">
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 
     <script async="async" defer="defer" type="text/javascript">
-        //$(document).ready(function () {
-        //    $('[data-toggle="tooltip"]').tooltip();
-        //});
-
+        
         //weightInputType
         
         const weightInputSelector = document.getElementById("weightInputTypeSelected");

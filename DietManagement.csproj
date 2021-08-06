@@ -69,8 +69,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Authentication\ChangePassword.aspx" />
+    <Content Include="Authentication\ForgotPassword.aspx" />
     <Content Include="Authentication\LoginPage.aspx" />
+    <Content Include="Authentication\logout.asmx" />
     <Content Include="Authentication\RegisterPage.aspx" />
+    <Content Include="homePage.css" />
     <Content Include="Images\diet.jpg" />
     <Content Include="Images\diet5.jpg" />
     <Content Include="Images\e1.jpg" />
@@ -115,12 +119,30 @@
     <Content Include="HomePage.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\ChangePassword.aspx.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Authentication\ChangePassword.aspx.designer.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Authentication\ForgotPassword.aspx.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Authentication\ForgotPassword.aspx.designer.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Authentication\LoginPage.aspx.cs">
       <DependentUpon>LoginPage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Authentication\LoginPage.aspx.designer.cs">
       <DependentUpon>LoginPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Authentication\logout.asmx.cs">
+      <DependentUpon>logout.asmx</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Navigation\Navigation.master.cs">
       <DependentUpon>Navigation.master</DependentUpon>

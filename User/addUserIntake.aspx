@@ -12,7 +12,7 @@
 <asp:Content runat="server" ContentPlaceHolderID="MainContentPlaceHolder">
 
 
-    <div class="container-fluid img-fluid min-vh-100" style="background-image: url('back/Intake.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
+    <div class="container-fluid img-fluid min-vh-100" style="background-image: url('/Images/Intake.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
         <form runat="server">
             <div class="row cust justify-content-around">
 
