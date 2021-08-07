@@ -257,6 +257,7 @@
     <Content Include="Bootstrap-5\js\bootstrap.min.js.map" />
     <Content Include="Navigation\userNavigation.master" />
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\registry.hub.docker.com_Akash2000.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
