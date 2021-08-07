@@ -18,14 +18,13 @@ namespace DietManagement.User
 
             if (Session["Username"] != null && Session["UserId"] != null)
             {
-                Label1.Text = Session["Username"].ToString();
                 loggedUser = Session["Username"].ToString();
 
                 fu();
             }
             else
             {
-                Response.Redirect("Login.aspx");
+                Response.Redirect("/User/LoginPage.aspx");
             }
         }
 

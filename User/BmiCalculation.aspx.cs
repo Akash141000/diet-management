@@ -27,18 +27,17 @@ namespace DietManagement.User
 
             if (Session["Username"] != null && Session["UserId"] != null)
             {
-                loggedUser.Text = Session["Username"].ToString();
+                //loggedUser.Text = Session["Username"].ToString();
                 UserId = Session["UserId"].ToString();
                 isLogged = true;
+                Label masterLbl = (Label)(Master.FindControl("loggedUser"));
+                masterLbl.Text = Session["Username"].ToString();
             }
             else
             {
                 Response.Redirect("~/Authentication/LoginPage.aspx");
             }
 
-
-
-            //datadel();
         }
 
 
@@ -56,18 +55,12 @@ namespace DietManagement.User
                 if (weightSelectedValue == "lbs")
                 {
 
-                    // demo1 = weightInput.Text;
-                    //demo2 = Convert.ToInt32(weightInput.Text);
-                    //demo3 = Double.Parse((Convert.ToInt32(weightInput.Text) / 2.205).ToString());
                     lbs = (int)Double.Parse((Convert.ToInt32(weightInput.Text) / 2.205).ToString());
                     weight = lbs;
                 }
                 else if (weightSelectedValue == "Kg")
                 {
 
-
-                    //demo1 = weightInput.Text;
-                    // demo2 = Convert.ToInt32(weightInput.Text);
                     lbs = Convert.ToInt32(weightInput.Text);
                     weight = lbs;
                 }

@@ -26,7 +26,7 @@ namespace DietManagement.User
 
                     loggedUser = Session["Username"].ToString();
                     UserId = Session["UserId"].ToString();
-                    Label5.Text = loggedUser;
+                    
                 }
                 else
                 {

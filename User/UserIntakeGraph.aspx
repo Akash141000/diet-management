@@ -17,12 +17,7 @@
 <asp:Content runat="server" ContentPlaceHolderID="MainContentPlaceHolder">
 
 
-    <div style="float: right">
-        <span class="fas fa-user">
-            <asp:Label ID="Label1" runat="server"
-                ForeColor="White" Style="float: right"></asp:Label>
-        </span>
-    </div>
+   
 
     <div class="container padd justify-content-center min-vh-100">
         <div class="row cust justify-content-around  ">

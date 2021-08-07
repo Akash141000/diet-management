@@ -17,18 +17,13 @@
 <asp:Content runat="server" ContentPlaceHolderID="MainContentPlaceHolder">
 
     
-    <div class="container-fluid img-fluid min-vh-100" style="background-image: url('/Images/gw.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
+    <div class="container-fluid img-fluid min-vh-100" style="margin:0px;padding:0px;background-image: url('/Images/gw.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
         <form runat="server">
-        <div class="row  justify-content-around">
-            <div class="col-lg-12  justify-content-end text-dark text-lg-right " style="font-size:20px">
-                <span class="fas fa-user">
-                    <asp:Label ID="Label2" runat="server"></asp:Label>
-                </span>
-            </div>
-            </div>
-
-            <div class="row  justify-content-around ">
-                <div class="col-lg-4  ">
+        
+            
+            
+            <div class="row justify-content-around">
+                <div class="col-lg-4 mt-5" style="padding-top:10rem">
                     <div class="form-group row ">
                         <h4> <asp:Label ID="enterDataLbl" runat="server" Text="Enter Date"
                             class="control-label text text-dark col-lg-4"></asp:Label></h4>
@@ -36,21 +31,26 @@
                         <div class="input-group col-lg-8">
                             <asp:TextBox ID="dataInput" runat="server" data-placement="right" title="Enter date between last week" data-toggle="tooltip"
                                 placeholder="dd-mm-yyyy" class="form-control" TextMode="Date"></asp:TextBox>
-                            <span class="help-block">
+                           
+                        </div>
+                        <strong>
+                             <span class="help-block m-2">
+                                <asp:RequiredFieldValidator ID="dataRequiredFieldValidator" Display="Dynamic" ControlToValidate="dataInput" runat="server" ErrorMessage="Enter date"></asp:RequiredFieldValidator>
                                 <asp:Label ID="invalidDateLbl" runat="server" class="text-dark"></asp:Label>
                                 <asp:Label ID="searchResultLbl" runat="server" Class="text-dark"></asp:Label>
                             </span>
-                        </div>
+                        </strong>
+                        
                     </div>
                     <div class="form-group row ">
-                        <div class="col-lg-12">
+                        <div class="col-lg-12 mt-2">
 
                             <asp:Button
                                 ID="displayIntakeDataBtn" runat="server"
                                 Text="Display" OnClick="displayIntakeDataBtn_Click" data-placement="right" title="Click to Display data" data-toggle="tooltip" class="btn-outline-dark form-control" />
                             <asp:Button runat="server" Visible="false" OnClick="statisticsBtn_Click"
                                 ID="statisticsBtn" Text="Statistics"  data-placement="right" title="Click to display Graph" data-toggle="tooltip"
-                                class="btn-outline-dark form-control" />
+                                class="btn-outline-dark form-control mt-1" />
 
 
                         </div>
@@ -59,7 +59,7 @@
                 </div>
             </div>
 
-            <div class="row  justify-content-around">
+            <div class="row  justify-content-around mt-4">
                 <div class="col-lg-8 offset-lg-2">
                     <asp:GridView ID="displayIntakeGridView" runat="server" Class="text-dark" PageSize="5"
                         Width="683px" BackColor="White"
@@ -80,14 +80,13 @@
             </div>
 
 
-
             </form>
         </div>
 
     <%-- script --%>
 <script type="text/javascript">
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 </script>
 </asp:Content>

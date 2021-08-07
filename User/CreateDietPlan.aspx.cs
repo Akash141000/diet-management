@@ -23,7 +23,7 @@ namespace DietManagement.User
 
             if (Session["Username"] != null && Session["UserId"] != null)
             {
-                Label7.Text = Session["Username"].ToString();
+                
                 UserId = Session["UserId"].ToString();
                 loggedUser = Session["Username"].ToString();
             }

@@ -15,14 +15,16 @@
         <script async="async" defer="defer" src="../Bootstrap-5/css/js/bootstrap.bundle.min.js"></script>
     </div>
 
-    <div class="container-fluid img-fluid min-vh-100" style="background-image: url('../Images/r3.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
-        <div class="row pad justify-content-around text-light">
+    <div class="container-fluid img-fluid min-vh-100" style="padding:0px;margin:0px;;background-image: url('../Images/r3.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
+          <div style="background-color: rgba(0,0,0,0.5);height:100vh;width:inherit">
+        <div class="row  justify-content-around text-light" style="height:100vh;padding:0px;margin:0px">
+           
             <div class="col-lg-4 col-sm-12">
-                <form runat="server" class="card-transparent">
+                <form runat="server" class="card-transparent ">
                     <div class="card-header ">
                         <h2>Registration</h2>
                     </div>
-                    <div class="form-group row ">
+                    <div class="form-group row pb-2">
                         <asp:Label ID="fullNameLabel" runat="server" class="col-lg-4" Text="Name"></asp:Label>
                         <div class="col-lg-8">
                             <asp:TextBox ID="fullNameInput" data-placement="right" title="Enter only alphabets" data-toggle="tooltip" runat="server"
@@ -39,7 +41,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row pb-2">
                         <asp:Label ID="genderLabel" runat="server" class="col-lg-4" Text="Gender"></asp:Label>
                         <div class="col-lg-8">
                             <asp:DropDownList ID="genderTypeSelected" runat="server"
@@ -54,7 +56,7 @@
                     </div>
 
 
-                    <div class="form-group row">
+                    <div class="form-group row pb-2">
                         <asp:Label ID="emailIdLabel" runat="server" class="col-lg-4" Text="Email id"></asp:Label>
                         <div class="col-lg-8">
                             <asp:TextBox ID="emailIdInput" runat="server"
@@ -72,7 +74,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row pb-2">
                         <asp:Label ID="usernameLabel" runat="server" class="col-lg-4" Text="Username"></asp:Label>
                         <div class="col-lg-8">
                             <asp:TextBox ID="usernameInput" class="form-control" data-placement="right" title="Username must be minimum 6 characters,atleast 1 number." data-toggle="tooltip" runat="server"></asp:TextBox>
@@ -88,7 +90,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row pb-2">
                         <asp:Label ID="passwordLabel" runat="server" class="col-lg-4" Text="Password"></asp:Label>
                         <div class="col-lg-8">
                             <asp:TextBox ID="passwordInput" data-placement="right" title="Password must contain Minimum 8 characters,at least 1 uppercase,lowercase letter,number and 1 special character" data-toggle="tooltip" runat="server" TextMode="Password"
@@ -107,7 +109,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row pb-2">
                         <asp:Label ID="confirmPasswordLabel" runat="server" class="col-lg-4" Text="Confirm Password"></asp:Label>
                         <div class="col-lg-8">
                             <asp:TextBox ID="confirmPasswordInput" data-placement="right" title="Confirm Password" data-toggle="tooltip" runat="server" TextMode="Password"
@@ -121,7 +123,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row justify-content-around">
+                    <div class="form-group row justify-content-around pb-2">
                         <asp:Button ID="registrationSubmit" runat="server" OnClick="registrationSubmit_Click" data-placement="right" title="Click to Register" data-toggle="tooltip"
                             Text="Register" class="btn-outline-dark form-control" />
                         <span class="help-block">
@@ -131,9 +133,16 @@
                     </div>
                 </form>
 
+                </div>
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 
 </asp:Content>
 

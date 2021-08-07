@@ -17,7 +17,7 @@ namespace DietManagement.User
         {
             if (Session["Username"] != null && Session["UserId"] != null)
             {
-                userLoggedLabel.Text = Session["Username"].ToString();
+                
                 string loggedUser = Session["Username"].ToString();
                 Binddata();
             }
@@ -106,8 +106,8 @@ namespace DietManagement.User
                 else
                 {
 
-                    addNewFoodItemBtn.Visible = true;
-
+                    addNewFoodItemBtn.Visible = false; // disbled feature
+                    searchResultLbl.Text = "Item not found!";
                     userAddFoodResultLbl.Visible = false;
                 }
                 con.Close();

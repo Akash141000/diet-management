@@ -12,30 +12,30 @@
 <asp:Content runat="server" ContentPlaceHolderID="MainContentPlaceHolder">
 
 
-    <div class="container-fluid img-fluid min-vh-100" style="background-image: url('/Images/Intake.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
+    <div class="container-fluid img-fluid min-vh-100" style="padding:0px;margin:0px;background-image: url('/Images/Intake.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
         <form runat="server">
-            <div class="row cust justify-content-around">
+            
+             <div style="background-color: rgba(0,0,0,0.5);height:inherit;width:100%">
+            <div class="row  justify-content-around" style="padding-top:5rem">
+                
 
 
 
 
-
-                <div class="col-lg-8 offset-lg-2 justify-content-around cust ">
-                    <div class="input-group col-lg-12 order-md-2 order-lg-1 ">
+                <div class="col-lg-8 offset-lg-1 justify-content-around my-2 ">
+                    <div class="input-group col-lg-9 order-first order-lg-1 ">
                         <asp:TextBox ID="TextBox1" runat="server" class=" form-control " Height="45px" placeholder="Search food">
                         </asp:TextBox>
-                        <div class="input-group-btn col-lg-3">
-                            <asp:Button ID="SearchFoodBtn" runat="server" data-placement="right" title="Click to Search" data-toggle="tooltip" class="btn-light form-control" Text="Search" OnClick="SearchFoodBtn_Click" />
-                            <asp:Button ID="addNewFoodItemBtn" runat="server" data-placement="right" title="Click to add food to database" data-toggle="tooltip" class="btn-light form-control" Text="Add" PostBackUrl="/User/AddNewFoodItem.aspx" />
+                        
+                        <div class="input-group-btn col-lg-1">
+                            <asp:Button ID="SearchFoodBtn" runat="server" data-placement="right" title="Click to Search"  data-toggle="tooltip" class="btn btn-primary  form-control"  Text="Search" OnClick="SearchFoodBtn_Click" />
+                                                       <span><asp:Label ID="searchResultLbl" CssClass="text-light" runat="server" Text=""></asp:Label></span>
+                            <asp:Button ID="addNewFoodItemBtn" Visible="false" runat="server" data-placement="right" title="Click to add food to database" data-toggle="tooltip" class="btn-primary form-control" Text="Add" PostBackUrl="/User/AddNewFoodItem.aspx" />
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-2 cust text-light text-lg-right order-md-1 order-lg-2 " style="font-size: 20px">
-                    <span class="fas fa-user">
-                        <asp:Label ID="userLoggedLabel" runat="server"></asp:Label>
-                    </span>
-                </div>
+             
             </div>
 
 
@@ -43,28 +43,28 @@
 
 
 
-            <div class="row cust justify-content-around">
+            <div class="row  justify-content-around">
                 <div class="col-lg-12 col-sm-12">
                     <asp:GridView ID="gridView" runat="server"
                         PageSize="5"
                         OnSelectedIndexChanged="gridView_SelectedIndexChanged" Width="100%"
                         AllowPaging="True" Height="299px" Font-Bold="True" Font-Size="15pt"
                         ForeColor="#333333" CellPadding="4" GridLines="None" Style="margin-right: 0px"
-                        ViewStateMode="Enabled"
-                        OnPageIndexChanging="gridView_Selected" AutoGenerateColumns="False">
+                        ViewStateMode="Enabled" HeaderStyle-CssClass="text-light"
+                        OnPageIndexChanging="gridView_Selected" AutoGenerateColumns="false">
                         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                         <Columns>
-                            <asp:TemplateField HeaderText="Select" ShowHeader="False">
+                            <asp:TemplateField ShowHeader="False">
                                 <ItemTemplate>
-                                    <asp:LinkButton ID="LinkaddNewFoodItemBtn" runat="server" CausesValidation="False" CommandName="Select" Text="Select"></asp:LinkButton>
+                                    <asp:LinkButton ID="LinkaddNewFoodItemBtn" runat="server" CausesValidation="False" CssClass="btn btn-outline-primary" CommandName="Select" Text="Select"></asp:LinkButton>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:BoundField DataField="Food" />
-                            <asp:BoundField DataField="Serving Size" />
-                            <asp:BoundField DataField="Protein" />
-                            <asp:BoundField DataField="Carbohydrate" />
-                            <asp:BoundField DataField="Total_Fat" />
-                            <asp:BoundField DataField="Food Type" />
+                            <asp:BoundField DataField="Food" HeaderText="Food"/>
+                            <asp:BoundField DataField="Serving Size" HeaderText="ServingSize" />
+                            <asp:BoundField DataField="Protein" HeaderText="Protein" />
+                            <asp:BoundField DataField="Carbohydrate" HeaderText="Carbohydrate" />
+                            <asp:BoundField DataField="Total_Fat" HeaderText="TotalFat" />
+                            <asp:BoundField DataField="Food Type" HeaderText="FoodType" />
 
                         </Columns>
                         <EditRowStyle BackColor="#999999" />
@@ -84,7 +84,7 @@
                 </div>
             </div>
 
-            <div class="row cust justify-content-around ">
+            <div class="row  justify-content-around mt-2">
                 <div class="col-lg-6 text-center">
                     <h3>
                         <asp:Label ID="Label58" runat="server" class="col-lg-3 text-white" Text="Food -"></asp:Label>
@@ -94,7 +94,7 @@
                 </div>
 
                 <div class="col-lg-4 offset-lg-1">
-                    <asp:Button ID="userAddFoodBtn" runat="server" data-placement="top" title="Click Add and keep a track of what you eat" data-toggle="tooltip" class="btn-light form-control " OnClick="userAddFoodBtn_Click" Text="Add" />
+                    <asp:Button ID="userAddFoodBtn" runat="server" data-placement="top" title="Click Add and keep a track of what you eat" data-toggle="tooltip" class="btn-outline-primary form-control " OnClick="userAddFoodBtn_Click" Text="Add" />
                     <span class="help-block text-white">
 
                         <asp:Label ID="userAddFoodResultLbl" runat="server" Text="Added Successfully"></asp:Label>
@@ -107,7 +107,7 @@
             <div class="row justify-content-around text-white">
                 <div>
 
-                    <div class="col-lg-12 cust text-center">
+                    <div class="col-lg-12  text-center">
                         <h4>
                             <asp:Label ID="nutritionContentLbl" runat="server" Text="Nutrition Content"></asp:Label>
                         </h4>
@@ -115,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row justify-content-around text-white">
+            <div class="row justify-content-around text-white mt-2">
                 <div class="col-lg-12" style="font-size: 20px">
                     <table class="table table-borderless text-light">
                         <tr style="text-align: center">
@@ -248,7 +248,7 @@
                 </div>
 
             </div>
-
+                 </div>
 
         </form>
 
@@ -256,9 +256,9 @@
 
 
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
-    </script>
+   <script type="text/javascript">
+       $(document).ready(function () {
+           $('[data-toggle="tooltip"]').tooltip();
+       });
+   </script>
 </asp:Content>

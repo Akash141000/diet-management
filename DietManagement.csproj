@@ -74,6 +74,7 @@
     <Content Include="Authentication\LoginPage.aspx" />
     <Content Include="Authentication\logout.asmx" />
     <Content Include="Authentication\RegisterPage.aspx" />
+    <Content Include="common.css" />
     <Content Include="homePage.css" />
     <Content Include="Images\diet.jpg" />
     <Content Include="Images\diet5.jpg" />

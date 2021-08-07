@@ -19,7 +19,7 @@ namespace DietManagement.User
         {
             if (Session["Username"] != null && Session["UserId"] != null)
             {
-                Label2.Text = Session["Username"].ToString();
+                
                 loggedUser = Session["Username"].ToString();
                 UserId = Session["UserId"].ToString();
                 searchResultLbl.Visible = false;
@@ -64,7 +64,7 @@ namespace DietManagement.User
 
 
 
-        protected void bt()
+        protected void calculateDataForGraph()
         {
 
            
@@ -87,17 +87,17 @@ namespace DietManagement.User
                     ro = dte.Rows.Count;
 
 
-                    for (int i = 0; i < ro; i++)
+                    for (int noOfRows = 0; noOfRows < ro; noOfRows++)
                     {
                         int Totalprot = 0, Totalcarb = 0, Totalfat = 0;
 
                         SqlCommand cmd1 = new SqlCommand("SELECT Protein,Carbohydrate,[Total Fat] FROM [UserIntakeHistory] WHERE Username=@User AND Datetime=@date", con);
                         cmd1.Parameters.AddWithValue("@User", loggedUser);
-                        string tem = dte.Rows[i][0].ToString();
-                        DateTime temp = DateTime.Parse(tem);
+                        string date = dte.Rows[noOfRows][0].ToString();
+                        DateTime dateTime = DateTime.Parse(date);
 
 
-                        cmd1.Parameters.AddWithValue("@date", temp);
+                        cmd1.Parameters.AddWithValue("@date", dateTime);
                         
                         SqlDataReader read = cmd1.ExecuteReader();
                         while (read.Read())
@@ -116,16 +116,17 @@ namespace DietManagement.User
                         SqlCommand cd = new SqlCommand("SELECT * FROM [UserIntake] WHERE Username=@Username AND Datetime=@Date", con);
                       
                         cd.Parameters.AddWithValue("@Username", loggedUser);
-                        cd.Parameters.AddWithValue("@Date", temp);
-                        SqlDataAdapter da = new SqlDataAdapter(cd);
-                        DataTable dti = new DataTable();
-                        da.Fill(dti);
-                        if (dti.Rows.Count > 0)
+                        cd.Parameters.AddWithValue("@Date", dateTime);
+                        var result = cd.ExecuteScalar();
+                        //SqlDataAdapter da = new SqlDataAdapter(cd);
+                        //DataTable dti = new DataTable();
+                        //da.Fill(dti);
+                        if (result != null)
                         {
                             SqlCommand cmdQ = new SqlCommand("UPDATE [UserIntake] SET Caloricint=@cal WHERE Username=@usrname AND Datetime=@Date", con);
                             cmdQ.Parameters.AddWithValue("@cal", ma);
                             cmdQ.Parameters.AddWithValue("@usrname", loggedUser);
-                            cmdQ.Parameters.AddWithValue("@Date", temp);
+                            cmdQ.Parameters.AddWithValue("@Date", dateTime);
                             cmdQ.ExecuteNonQuery();
                         }
 
@@ -134,7 +135,7 @@ namespace DietManagement.User
                             SqlCommand cmdQ = new SqlCommand("INSERT INTO [UserIntake] (Maintanance,Caloricint,Datetime,Username) values(@main,@cal,@date,@User)", con);
                             cmdQ.Parameters.AddWithValue("@main", maintananceCalories);
                             cmdQ.Parameters.AddWithValue("@cal", ma);
-                            cmdQ.Parameters.AddWithValue("@date", temp);
+                            cmdQ.Parameters.AddWithValue("@date", dateTime);
                             cmdQ.Parameters.AddWithValue("@User", loggedUser);
                             cmdQ.ExecuteNonQuery();
 
@@ -192,8 +193,8 @@ namespace DietManagement.User
                             displayIntakeGridView.DataSource = reader;
                             displayIntakeGridView.DataBind();
                             reader.Close();
-                            bt();
-                            statisticsBtn.Visible = true;
+                           // calculateDataForGraph();
+                            statisticsBtn.Visible = false; //disable the feature
                         }
                         else
                         {

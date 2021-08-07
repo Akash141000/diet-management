@@ -27,6 +27,10 @@ namespace DietManagement.Authentication
 
             Session["Username"] = null;
             Session["UserId"] = null;
+            HttpCookie cookie = new HttpCookie("userInfo");
+            cookie.Expires = DateTime.Now.AddDays(-1);
+
+
             //Response.Cookies.Remove("userInfo");
             return true;
             //Response.Redirect("/");

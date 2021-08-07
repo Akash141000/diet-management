@@ -22,24 +22,18 @@
 
     <div
         class="container-fluid img-fluid min-vh-100"
-        style="background-image: url('/Images/e1.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%;">
+        style="padding:0px;margin:0px;background-image: url('/Images/e1.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%;">
         <form runat="server" method="post" class="row  justify-content-around">
+            
+            
             <div
-                class="col-lg-12  justify-content-end text-light text-lg-right"
-                style="font-size: 20px">
-                <span class="fas fa-user">
-                    <asp:Label ID="loggedUser" runat="server"></asp:Label>
-                </span>
-            </div>
-
-            <div
-                class="row  col-lg-4 col-sm-12 text-light justify-content-around">
-                <div class="card-transparent">
-                    <div class="card=header">
+                class="row  col-lg-4 col-sm-12 mt-5 pt-5 text-dark justify-content-around">
+                <div class="card">
+                    <div class="card=header text-dark mt-4">
                         <h2>Body-Mass Index</h2>
                     </div>
                     <div class="card-body">
-                        <div class="form-group row">
+                        <div class="form-group row mb-2">
                             <asp:Label
                                 ID="weightLabel"
                                 runat="server"
@@ -88,7 +82,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="form-group row mb-2">
                             <asp:Label
                                 ID="heightLabel"
                                 runat="server"
@@ -143,28 +137,9 @@
                                         ErrorMessage="Required!">
                                     </asp:RequiredFieldValidator>
 
-                                    <%--<asp:RegularExpressionValidator
-                                        ID="heightInputRegex"
-                                        Enabled="true"
-                                        runat="server"
-                                        ControlToValidate="heightInput"
-                                        ValidationExpression="^[0-9]*[1-9][0-9]*$"
-                                        Display="Dynamic"
-                                        ErrorMessage="Invalid Input!"
-                                        SetFocusOnError="True">
-                                    </asp:RegularExpressionValidator>--%>
-
                                     <asp:CustomValidator ID="heightInputCustomValidator" runat="server" ClientValidationFunction="customValidatorHeight" Display="Dynamic" ControlToValidate="heightInput" ErrorMessage="Invalid Input!" SetFocusOnError="true"></asp:CustomValidator>
 
-                                    <%--<asp:RegularExpressionValidator
-                                        ID="heightInputRegex2"
-                                        Enabled="false"
-                                        runat="server"
-                                        ControlToValidate="heightInput"
-                                        ValidationExpression="[0-9]([.,][0-9]{1,2})?$"
-                                        Display="Dynamic"
-                                        ErrorMessage="Invalid Input!">
-                                    </asp:RegularExpressionValidator>--%>
+                                  
 
                                     <asp:RangeValidator
                                         ID="heightInputRangeValidatorInches"
@@ -177,40 +152,34 @@
                                         ErrorMessage="Invalid Input!">
                                     </asp:RangeValidator>
 
-                                   <%-- <asp:RangeValidator
-                                        ID="heightInputRangeValidator"
-                                        runat="server"
-                                        ControlToValidate="heightInput"
-                                        MinimumValue="4"
-                                        MaximumValue="6"
-                                        Display="Dynamic"
-                                        ErrorMessage="Invalid Input!">
-                                    </asp:RangeValidator>--%>
-
 
                                 </span>
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                       <div class="form-group row mb-2">
                             <asp:Label
                                 ID="AgeLabel"
                                 runat="server"
                                 Text="Age"
                                 class="col-lg-4"></asp:Label>
                             <div class="col-lg-8">
-                                <asp:TextBox
-                                    ID="ageInput"
-                                    data-placement="right"
-                                    title="Enter age between [15-100]"
-                                    data-toggle="tooltip"
-                                    runat="server"
-                                    class="form-control"
-                                    placeholder="age"></asp:TextBox>
-                                <span class="help-block">
+                                <div class="input-group">
+                                    <asp:TextBox
+                                        ID="ageInput"
+                                        placeholder="age"
+                                        data-placement="right"
+                                        title="Enter age between [15-100]"
+                                        data-toggle="tooltip"
+                                        runat="server"
+                                        class="form-control"></asp:TextBox>
+                                    
+                                </div>
+                               <span class="help-block">
                                     <asp:RequiredFieldValidator
                                         ID="ageInputRequiredValidator"
                                         runat="server"
+                                        display="Dynamic"
                                         ControlToValidate="ageInput"
                                         ErrorMessage="Required!">
                                     </asp:RequiredFieldValidator>
@@ -218,6 +187,7 @@
                                     <asp:RangeValidator
                                         ID="ageInputRangeValidator"
                                         runat="server"
+                                         display="Dynamic"
                                         ControlToValidate="ageInput"
                                         MinimumValue="15"
                                         MaximumValue="100"
@@ -228,7 +198,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="form-group row mb-2">
                             <asp:Label
                                 ID="category"
                                 runat="server"
@@ -246,7 +216,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="form-group row mb-2">
                             <asp:Label
                                 ID="foodCategory"
                                 runat="server"
@@ -263,7 +233,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="form-group row mt-3 mb-3">
                             <div class="col-lg-12">
                                 <asp:Button
                                     ID="saveBmi"
@@ -280,7 +250,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row text-dark">
+                        <div class="form-group row text-dark mb-2">
                             <div class="card card-body">
                                 <div class="form-group">
                                     <asp:Label
@@ -308,12 +278,8 @@
             </div>
         </form>
     </div>
-    <script type="text/x-jquery-tmpl">
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
-    </script>
 
+     
     <script async="async" defer="defer" type="text/javascript">
         
         //weightInputType

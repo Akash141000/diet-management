@@ -8,11 +8,6 @@
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-   
-
-
-
-
 
 </asp:Content>
 
@@ -21,18 +16,19 @@
 
 <asp:Content runat="server" ContentPlaceHolderID="MainContentPlaceHolder">
 
-    <div class="container-fluid img-fluid min-vh-100" style="background-image: url('/Images/diet.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
-        <div class="row  justify-content-around">
-            <div class="col-lg-12  justify-content-end text-dark text-lg-right " style="font-size: 20px">
-                <span class="fas fa-user">
-                    <asp:Label ID="userLoggedLbl" runat="server"></asp:Label>
-                </span>
-            </div>
-        </div>
+    <style type="text/css">
+            .hidden {
+                display: none;
+            }
+        </style>
 
 
+    <div class="container-fluid img-fluid min-vh-100" style="padding:0px;margin:0px;background-image: url('/Images/diet.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-position: 100% 100%">
+        
+          <div style="background-color: rgba(0,0,0,0.5);height:inherit;width:100%">
 
-        <div class="row  justify-content-around">
+
+        <div class="row  justify-content-around" style="padding-top:10rem">
             <div class="col-lg-8" style="font-size: 20px">
                 <div>
                     <ul class="list-group">
@@ -88,7 +84,7 @@
             </div>
             <br />
             <div class="row justify-content-around">
-                <div class="col-lg-8 text-center" style="font-size: 20px">
+                <div class="col-lg-8 text-center text-light" style="font-size: 20px">
                     <strong>
                         <asp:Label ID="BreakfastLbl" runat="server" Text="Breakfast"></asp:Label>
                     </strong>
@@ -105,7 +101,7 @@
                         GridLines="Vertical" Width="100%" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px">
                         <AlternatingRowStyle BackColor="White" />
                         <Columns>
-                            <asp:BoundField DataField="Id" HeaderText="Id" SortExpression="Id" />
+                            <asp:BoundField DataField="Id" HeaderText="Id" SortExpression="Id" HeaderStyle-CssClass="hidden"  ItemStyle-CssClass="hidden"/>
                             <asp:BoundField DataField="Food" HeaderText="Food" SortExpression="Food" />
                             <asp:BoundField DataField="Protein" HeaderText="Protein"
                                 SortExpression="Protein" />
@@ -131,7 +127,7 @@
             </div>
             <br />
             <div class="row justify-content-around ">
-                <div class="col-lg-8 text-center" style="font-size: 20px">
+                <div class="col-lg-8 text-center text-light" style="font-size: 20px">
                     <strong>
                         <asp:Label ID="lunchLbl" runat="server" Text="Lunch"></asp:Label>
                     </strong>
@@ -148,7 +144,7 @@
                         GridLines="Vertical" Width="100%" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px">
                         <AlternatingRowStyle BackColor="White" />
                         <Columns>
-                            <asp:BoundField DataField="Id" HeaderText="Id" SortExpression="Id" />
+                            <asp:BoundField DataField="Id" HeaderText="Id" SortExpression="Id" HeaderStyle-CssClass="hidden"  ItemStyle-CssClass="hidden" />
                             <asp:BoundField DataField="Food" HeaderText="Food" SortExpression="Food" />
                             <asp:BoundField DataField="Protein" HeaderText="Protein"
                                 SortExpression="Protein" />
@@ -174,7 +170,7 @@
             </div>
             <br />
             <div class="row justify-content-around ">
-                <div class="col-lg-8 text-center" style="font-size: 20px">
+                <div class="col-lg-8 text-center text-light" style="font-size: 20px">
                     <strong>
                         <asp:Label ID="snackLbl" runat="server" Text="Snack"></asp:Label>
                     </strong>
@@ -191,7 +187,7 @@
                         GridLines="Vertical" Width="100%" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px">
                         <AlternatingRowStyle BackColor="White" />
                         <Columns>
-                            <asp:BoundField DataField="Id" HeaderText="Id" SortExpression="Id" />
+                            <asp:BoundField DataField="Id" HeaderText="Id" SortExpression="Id" HeaderStyle-CssClass="hidden"  ItemStyle-CssClass="hidden"/>
                             <asp:BoundField DataField="Food" HeaderText="Food" SortExpression="Food" />
                             <asp:BoundField DataField="Protein" HeaderText="Protein"
                                 SortExpression="Protein" />
@@ -217,7 +213,7 @@
             </div>
             <br />
             <div class="row justify-content-around ">
-                <div class="col-lg-8 text-center" style="font-size: 20px">
+                <div class="col-lg-8 text-center text-light" style="font-size: 20px">
                     <strong>
                         <asp:Label ID="dinnerLbl" runat="server" Text="Dinner"></asp:Label>
                     </strong>
@@ -235,7 +231,7 @@
                         GridLines="Vertical" Width="100%" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px">
                         <AlternatingRowStyle BackColor="White" />
                         <Columns>
-                            <asp:BoundField DataField="Id" HeaderText="Id" SortExpression="Id" />
+                            <asp:BoundField DataField="Id" HeaderText="Id" SortExpression="Id" HeaderStyle-CssClass="hidden"  ItemStyle-CssClass="hidden" />
                             <asp:BoundField DataField="Food" HeaderText="Food" SortExpression="Food" />
                             <asp:BoundField DataField="Protein" HeaderText="Protein"
                                 SortExpression="Protein" />
@@ -260,6 +256,7 @@
             </div>
         </form>
     </div>
+              </div>
 
 
     <%-- script --%>

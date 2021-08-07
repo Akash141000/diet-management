@@ -13,11 +13,7 @@
         async="async"
         defer="defer"
         src="../Bootstrap-5/css/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
-    </script>
+   
 </head>
 <body>
      <form id="form1" runat="server">
@@ -67,5 +63,11 @@
   
    
     </form>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 </body>
 </html>

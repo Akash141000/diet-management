@@ -32,10 +32,7 @@ namespace DietManagement
 
                 return;
             }
-
-            Session["UserId"] = null;
-            Session["Username"] = null;
-            Session["Admin"] = null;
+            Session.Clear();
             return;
         }
 
